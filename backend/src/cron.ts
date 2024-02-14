@@ -80,6 +80,7 @@ export class Cron {
               "Claim your NFT",
               "en-airdrop-claim",
               {
+                appUrl: env.APP_URL,
                 link: `${env.APP_URL}/claim?token=${token}`,
               }
             );
@@ -94,7 +95,9 @@ export class Cron {
               [users[i].email],
               "You are in waiting line for NFT claim",
               "en-airdrop-waiting-line",
-              {}
+              {
+                appUrl: env.APP_URL,
+              }
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
