@@ -14,9 +14,7 @@ export class Cron {
   constructor() {
     this.cronJobs.push(new CronJob('* * * * *', this.sendEmail, null, false));
     if (env.MAX_SUPPLY > 0) {
-      this.cronJobs.push(
-        new CronJob('* * * * *', this.processExpiredClaims, null, false)
-      );
+      this.cronJobs.push(new CronJob('* * * * *', this.processExpiredClaims, null, false));
     }
   }
 
@@ -75,14 +73,10 @@ export class Cron {
         try {
           if (!env.MAX_SUPPLY || i < availableNftLeft) {
             const token = await generateEmailAirdropToken(users[i].email);
-            await SmtpSendTemplate(
-              [users[i].email],
-              'Claim your NFT',
-              'en-airdrop-claim',
-              {
-                link: `${env.APP_URL}/claim?token=${token}`,
-              }
-            );
+            await SmtpSendTemplate([users[i].email], 'Claim your NFT', 'en-airdrop-claim', {
+              appUrl: env.APP_URL,
+              link: `${env.APP_URL}/claim?token=${token}`,
+            });
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
                 AirdropStatus.EMAIL_SENT
@@ -94,7 +88,9 @@ export class Cron {
               [users[i].email],
               'You are in waiting line for NFT claim',
               'en-airdrop-waiting-line',
-              {}
+              {
+                appUrl: env.APP_URL,
+              }
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
@@ -105,9 +101,9 @@ export class Cron {
         } catch (e) {
           writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
           updates.push(
-            `(${users[i].id}, '${users[i].email}', ${
-              AirdropStatus.EMAIL_ERROR
-            }, '${dateToSqlString(new Date())}')`
+            `(${users[i].id}, '${users[i].email}', ${AirdropStatus.EMAIL_ERROR}, '${dateToSqlString(
+              new Date()
+            )}')`
           );
         }
       }
@@ -147,7 +143,7 @@ export class Cron {
           null,
           conn
         )
-      ).map((x) => x.id);
+      ).map(x => x.id);
 
       if (usersWithExpiredClaim.length) {
         //Update those users to claim expired
@@ -180,7 +176,7 @@ export class Cron {
           await mysql.paramExecute(
             `UPDATE user 
                 SET airdrop_status = ${AirdropStatus.PENDING}
-                WHERE id IN (${usersInWaitingLine.map((x) => x.id).join(',')})
+                WHERE id IN (${usersInWaitingLine.map(x => x.id).join(',')})
               ;
             `,
             null,

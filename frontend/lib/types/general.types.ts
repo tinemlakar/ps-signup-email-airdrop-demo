@@ -1,31 +1,33 @@
-export interface ConfigInterface {
-  APP_URL: string;
-  API_BASE: string;
-  CHAIN_ID: number;
-  CAPTCHA_KEY: string;
-}
-
-export type AuthResponseProfile = {
-  id: number;
-  authUser: {
-    id: number;
-    status: number;
-    username: string;
-    email?: string;
-    roles: any[];
-    permissions: any[];
-  };
-};
-
-export type AuthResponse = {
-  profile: AuthResponseProfile;
-  authToken: {
-    status: boolean;
-    data: string;
-  };
-};
+export {}
 
 declare global {
+  interface ConfigInterface {
+    APP_URL: string;
+    API_BASE: string;
+    CHAIN_ID: number;
+    CAPTCHA_KEY: string;
+  }  
+
+ type AuthResponseProfile = {
+    id: number;
+    authUser: {
+      id: number;
+      status: number;
+      username: string;
+      email?: string;
+      roles: any[];
+      permissions: any[];
+    };
+  };
+
+ type AuthResponse = {
+    profile: AuthResponseProfile;
+    authToken: {
+      status: boolean;
+      data: string;
+    };
+  };
+  
   type CsvItem = {
     email: string;
     email_start_send_time: string;

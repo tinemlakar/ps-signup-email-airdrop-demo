@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 import VueHcaptcha from '@hcaptcha/vue3-hcaptcha';
 import colors from '~/tailwind.colors';
-import { FormInst, FormRules, FormValidationError } from 'naive-ui';
+import type { FormInst, FormRules, FormValidationError } from 'naive-ui';
 import { ruleRequired } from '~/lib/utils/validation';
 
 type SignupForm = {
   email: string | null;
+  termsAndConditions: boolean;
   token?: any;
 };
 
 const router = useRouter();
+
+const modalTermsAndConditionsVisible = ref<boolean>(false);
 
 const message = useMessage();
 const emit = defineEmits(['submitSuccess']);
@@ -28,6 +31,7 @@ const { handleError } = useErrors();
 const formRef = ref<FormInst | null>(null);
 const formData = ref<SignupForm>({
   email: null,
+  termsAndConditions: false,
   token: null as any,
 });
 
@@ -89,6 +93,14 @@ function onCaptchaVerify(token: string) {
       />
     </n-form-item>
 
+    <div class="flex pb-6 space-x-2">
+      <div class="my-auto">
+        <input v-model="formData.termsAndConditions" type="checkbox" class="w-[18px] h-[18px]">
+      </div>
+      
+      <p>I have read and agree to <u class="cursor-pointer" @click="modalTermsAndConditionsVisible = true"><strong>Terms and Conditions and Privacy Policy.</strong></u></p>
+    </div>
+
     <!-- Hcaptcha -->
     <vue-hcaptcha
       ref="captchaInput"
@@ -109,11 +121,19 @@ function onCaptchaVerify(token: string) {
         size="large"
         :color="colors.konference"
         :loading="loading"
-        :disabled="!formData.email || !formData.token"
+        :disabled="!formData.email || !formData.token || !formData.termsAndConditions"
         @click="handleSubmit"
       >
         Sign up
       </Btn>
     </n-form-item>
+
+      <modal
+      :show="modalTermsAndConditionsVisible"
+      @close="() => (modalTermsAndConditionsVisible = false)"
+      @update:show="modalTermsAndConditionsVisible = false"
+    >
+      <TermsAndConditions />
+    </modal>
   </n-form>
 </template>

@@ -1,15 +1,34 @@
 <script lang="ts" setup>
+import { prepareOG } from '~/lib/utils/helpers';
 import { Chains } from '~/lib/values/general.values';
 
-defineProps({
-  metadata: { type: Object as PropType<Metadata>, default: null },
-  txHash: { type: String, default: null },
+useHead({
+  title: 'PINK PASS',
 });
 
-const nuxtConfig = useRuntimeConfig();
+const router = useRouter();
+const { query } = useRoute();
+const config = useRuntimeConfig();
+
+useSeoMeta(
+  prepareOG(`Just minted my ${query.name} NFT on https://nft.ment.si!`, ``, `${query.image}`)
+);
+
+onBeforeMount(() => {
+  if (!query.name || !query.image) {
+    router.push('/');
+  }
+});
+
+const metadata = ref<Metadata | null>({
+  name: `${query?.name}`,
+  description: `${query?.description}`,
+  image: `${query?.image}`,
+});
+const txHash = ref<string | undefined>(`${query?.txHash}`);
 
 function transactionLink(transactionHash?: string | null): string {
-  switch (nuxtConfig.public.CHAIN_ID) {
+  switch (config.public.CHAIN_ID) {
     case Chains.MOONBEAM:
       return transactionHash
         ? `https://moonbeam.moonscan.io/tx/${transactionHash}`
@@ -32,22 +51,22 @@ function transactionLink(transactionHash?: string | null): string {
 <template>
   <div v-if="metadata" class="max-w-md w-full md:px-6 my-12 mx-auto">
     <div class="my-8 text-center">
-      <h3 class="mb-6">AchieveMENT unlocked!</h3>
-      <p>You are now a proud owner of a MENT token!</p>
-      <p>Display Your '{{ metadata.name }}' NFT collectible by sharing it on X.</p>
+      <h3 class="mb-6">Just minted my #{{ metadata.name }} NFT on nft.ment.si!</h3>
+      <p></p>
     </div>
 
     <div class="rounded-lg overflow-hidden mb-8">
       <img :src="metadata.image" class="" width="400" height="400" alt="nft" />
-      <div class="p-6 bg-bg-light">
+
+      <div class="p-6 bg-bg-lighter">
         <h5>{{ metadata.name }}</h5>
       </div>
       <div class="mt-4 text-center">
         <p class="mb-4">{{ metadata.description }}</p>
         <a
-          v-if="txHash"
+          v-if="query?.txHash && txHash"
           :href="transactionLink(txHash)"
-          class="text-black hover:underline"
+          class="text-yellow hover:underline"
           target="_blank"
         >
           Transaction: {{ shortHash(txHash) }}
@@ -58,9 +77,9 @@ function transactionLink(transactionHash?: string | null): string {
     <Btn
       type="secondary"
       size="large"
-      :href="`https://twitter.com/intent/tweet?text=Display Your '${metadata.name}' NFT Collectible by sharing it on X.`"
+      :href="`https://twitter.com/intent/tweet?text=Just minted my ${metadata.name} NFT on nft.ment.si!&url=https://nft.ment.si/`"
     >
-      <span class="inline-flex gap-2 items-center text-black">
+      <span class="inline-flex gap-2 items-center">
         <NuxtIcon name="x" class="text-xl" />
         <span>Share on X</span>
       </span>

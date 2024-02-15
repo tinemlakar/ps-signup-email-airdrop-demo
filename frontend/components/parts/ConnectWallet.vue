@@ -57,11 +57,7 @@ const { error } = useMessage();
 const userStore = useUserStore();
 const { handleError } = useErrors();
 
-const { connect, connectors, isLoading } = useConnect({
-  onSuccess: () => {
-    console.log('success');
-  },
-});
+const { connect, connectors, isLoading } = useConnect();
 const { data: walletClient, refetch } = useWalletClient();
 const { address, isConnected } = useAccount({ onConnect: loginDelay });
 const { disconnect } = useDisconnect();
