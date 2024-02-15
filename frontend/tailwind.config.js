@@ -23,7 +23,7 @@ module.exports = {
     },
 
     colors: {
-      primary: '#91331F',
+      primary: '#FF6188',
       secondary: '#78DCE8',
 
       transparent: 'transparent',
@@ -44,6 +44,7 @@ module.exports = {
       sprejemi: '#15D0AB',
       specialke: '#DD73DD',
       info: '#E9E8C4',
+      button: '#AC56AC',
 
       body: '#9D9E91',
       bodyDark: '#6A6B63',

@@ -105,7 +105,6 @@ function onCaptchaVerify(token: string) {
     <vue-hcaptcha
       ref="captchaInput"
       :sitekey="captchaKey"
-      theme="dark"
       @error="onCaptchaError"
       @verify="onCaptchaVerify"
       @expired="onCaptchaExpire"
@@ -119,7 +118,8 @@ function onCaptchaVerify(token: string) {
       <Btn
         type="primary"
         size="large"
-        :color="colors.konference"
+        class="text-white"
+        :color="colors.button"
         :loading="loading"
         :disabled="!formData.email || !formData.token || !formData.termsAndConditions"
         @click="handleSubmit"

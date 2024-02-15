@@ -1,6 +1,6 @@
 /** This is copy of Tailwind custom colors */
 export default {
-  primary: '#91331F',
+  primary: '#FF6188',
   secondary: '#78DCE8',
 
   transparent: 'transparent',
@@ -21,6 +21,7 @@ export default {
   sprejemi: '#15D0AB',
   specialke: '#DD73DD',
   info: '#E9E8C4',
+  button: '#AC56AC',
 
   body: '#9D9E91',
   bodyDark: '#6A6B63',
