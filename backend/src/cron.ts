@@ -7,7 +7,6 @@ import { SmtpSendTemplate } from "./lib/node-mailer";
 import { env } from "./config/env";
 import { generateEmailAirdropToken } from "./lib/jwt";
 import { LogType, writeLog } from "./lib/logger";
-import { LogLevel, Nft } from "@apillon/sdk";
 
 export class Cron {
   private cronJobs: CronJob[] = [];
@@ -56,7 +55,6 @@ export class Cron {
     }
 
     const conn = await mysql.start();
-    await conn.beginTransaction();
 
     try {
       const res = await conn.execute(
@@ -136,7 +134,6 @@ export class Cron {
   async processExpiredClaims() {
     const mysql = await MysqlConnectionManager.getInstance();
     const conn = await mysql.start();
-    await conn.beginTransaction();
 
     try {
       const res = await conn.execute(
