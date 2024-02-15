@@ -171,6 +171,7 @@ export class Cron {
             `SELECT * FROM user WHERE
           airdrop_status = ${AirdropStatus.IN_WAITING_LINE}
           AND status = ${SqlModelStatus.ACTIVE}
+          ORDER BY createTime ASC
           LIMIT ${usersWithExpiredClaim.length}
           FOR UPDATE
         ;
