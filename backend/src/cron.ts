@@ -7,7 +7,6 @@ import { SmtpSendTemplate } from './lib/node-mailer';
 import { env } from './config/env';
 import { generateEmailAirdropToken } from './lib/jwt';
 import { LogType, writeLog } from './lib/logger';
-import { LogLevel, Nft } from '@apillon/sdk';
 
 export class Cron {
   private cronJobs: CronJob[] = [];
