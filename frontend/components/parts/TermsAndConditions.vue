@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-md w-full md:px-6 my-12 mx-auto">
-    <img :src="LogoPNG" class="mx-auto" width="241" height="240" alt="wallet" />
+    <img :src="LogoPNG" class="mx-auto" width="240" height="240" alt="MENT" />
 
     <div class="my-8 text-center">
       <h3 class="mb-6">Terms and Conditions and Privacy Policy</h3>
