@@ -10,7 +10,7 @@ import { BaseSqlModel, prop } from "./base-sql-model";
 import { stringTrimParser } from "../lib/parsers";
 import { dateParser, integerParser, stringParser } from "@rawmodel/parsers";
 import { Context } from "../context";
-import { SqlError } from "../lib/errors";
+import { ResourceError, SqlError } from "../lib/errors";
 import { getQueryParams, selectAndCountQuery } from "../lib/sql-utils";
 
 export enum AirdropStatus {
@@ -150,6 +150,29 @@ export class User extends BaseSqlModel {
         this.getContext(),
         SystemErrorCode.DATABASE_ERROR,
         "user/create"
+      );
+    }
+  }
+
+  /**
+   * user wallet validation - Wallet should be used with only one user
+   */
+  public async validateWallet() {
+    const data = await this.db().paramQuery(
+      `
+      SELECT 1
+      FROM user
+      WHERE email <> @email
+      AND wallet = @wallet;
+    `,
+      {
+        email: this.email,
+        wallet: this.wallet,
+      }
+    );
+    if (data && data.length) {
+      throw new ResourceError(
+        ValidatorErrorCode.WALLET_BELONGS_TO_ANOTHER_USER
       );
     }
   }

@@ -10,6 +10,7 @@ export type Captcha = { eKey: string; token: string };
  * @returns {Promise<boolean>}
  */
 export async function checkCaptcha(captchaToken: string): Promise<boolean> {
+  //Skip check for local_dev and test environment
   if (
     [AppEnvironment.LOCAL_DEV, AppEnvironment.TEST].includes(
       env.APP_ENV as AppEnvironment
@@ -18,20 +19,16 @@ export async function checkCaptcha(captchaToken: string): Promise<boolean> {
     return true;
   }
 
+  //If captcha is not configured, skip check
   if (!env.CAPTCHA_SECRET) {
-    throwCodeException(ValidatorErrorCode.CAPTCHA_NOT_CONFIGURED);
+    return true;
   }
 
   if (!captchaToken) {
     throwCodeException(ValidatorErrorCode.CAPTCHA_NOT_PRESENT);
   }
 
-  if (
-    env.APP_ENV != AppEnvironment.LOCAL_DEV! &&
-    (await verifyCaptcha(captchaToken))
-  ) {
-    throwCodeException(ValidatorErrorCode.CAPTCHA_INVALID);
-  }
+  await verifyCaptcha(captchaToken);
 
   return true;
 }
@@ -44,7 +41,7 @@ async function verifyCaptcha(
     return (await verify(secret, token)).success;
   } catch (err) {
     console.error("Error verifying captcha!", err);
-    throw err;
+    throwCodeException(ValidatorErrorCode.CAPTCHA_INVALID);
   }
 }
 
