@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { NextFunction, Request, Response } from "../http";
-import { RouteErrorCode } from "../config/values";
+import { RouteErrorCode, ValidatorErrorCode } from "../config/values";
 import { ResourceError } from "../lib/errors";
 import { readEmailAirdropToken } from "../lib/jwt";
 import { AirdropStatus, User } from "../models/user";
@@ -57,9 +57,17 @@ export async function resolve(req: Request, res: Response): Promise<void> {
     throw new ResourceError(RouteErrorCode.USER_DOES_NOT_EXIST);
   }
 
+  if (
+    user.airdrop_status == AirdropStatus.WALLET_LINKED ||
+    user.airdrop_status == AirdropStatus.AIRDROP_COMPLETED
+  ) {
+    throw new ResourceError(ValidatorErrorCode.USER_ALREADY_MINTED);
+  }
+
   user.airdrop_status = AirdropStatus.WALLET_LINKED;
   user.wallet = wallet;
 
+  await user.validateWallet();
   await user.update();
 
   const collection = new Nft({
