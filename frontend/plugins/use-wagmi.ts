@@ -1,9 +1,9 @@
-import { UseWagmiPlugin, createConfig } from 'use-wagmi';
+import { UseWagmiPlugin, configureChains, createConfig } from 'use-wagmi';
 import { moonbaseAlpha, moonbeam } from 'use-wagmi/chains';
 import { MetaMaskConnector } from 'use-wagmi/connectors/metaMask';
 import { CoinbaseWalletConnector } from 'use-wagmi/connectors/coinbaseWallet';
 import { WalletConnectConnector } from 'use-wagmi/connectors/walletConnect';
-import { createPublicClient, http } from 'viem';
+import { publicProvider } from 'use-wagmi/providers/public';
 import { Chains } from '~/lib/values/general.values';
 
 export default defineNuxtPlugin(nuxtApp => {
@@ -11,16 +11,17 @@ export default defineNuxtPlugin(nuxtApp => {
   const chainId = nuxtConfig.public.CHAIN_ID;
 
   const chain = chainId === Chains.MOONBASE ? moonbaseAlpha : moonbeam;
-  const chains = [chain];
+  const networks = [chain];
+
+  const { chains, publicClient, webSocketPublicClient } = configureChains(networks, [
+    publicProvider(),
+  ]);
 
   const config = createConfig({
     autoConnect: true,
     connectors: [
       new MetaMaskConnector({
         chains,
-        options: {
-          UNSTABLE_shimOnConnectSelectAccount: true,
-        },
       }),
       new CoinbaseWalletConnector({
         chains,
@@ -46,10 +47,8 @@ export default defineNuxtPlugin(nuxtApp => {
       //   },
       // }),
     ],
-    publicClient: createPublicClient({
-      chain,
-      transport: http(),
-    }),
+    publicClient,
+    webSocketPublicClient,
   });
 
   nuxtApp.vueApp.use(UseWagmiPlugin, config);

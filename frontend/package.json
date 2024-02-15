@@ -40,8 +40,8 @@
     "prettier-plugin-tailwindcss": "^0.5.1",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.1",
-    "use-wagmi": "^0.3.9",
-    "viem": "^1.9.0"
+    "use-wagmi": "^0.4.9",
+    "viem": "^1.21.4"
   },
   "overrides": {
     "vue": "latest"
