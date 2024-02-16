@@ -117,8 +117,8 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
     <Btn
       v-else
       size="large"
-      class="text-white"
-      :color="colors.button"
+      class="text-black"
+      :color="colors.blue"
       :loading="loading"
       @click="claimAirdrop()"
     >

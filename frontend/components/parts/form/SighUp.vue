@@ -118,8 +118,8 @@ function onCaptchaVerify(token: string) {
       <Btn
         type="primary"
         size="large"
-        class="text-white"
-        :color="colors.button"
+        class="text-black"
+        :color="colors.blue"
         :loading="loading"
         :disabled="!formData.email || !formData.token || !formData.termsAndConditions"
         @click="handleSubmit"
@@ -130,6 +130,7 @@ function onCaptchaVerify(token: string) {
 
     <modal
       :show="modalTermsAndConditionsVisible"
+      @close="() => (modalTermsAndConditionsVisible = false)"
       @update:show="modalTermsAndConditionsVisible = false"
     >
       <TermsAndConditions @close="() => (modalTermsAndConditionsVisible = false)"/>

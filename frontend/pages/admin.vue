@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import UploadSVG from '~/assets/images/upload.svg';
+import colors from '~/tailwind.colors';
 import { useAccount } from 'use-wagmi';
 import { AirdropStatus } from '~/lib/values/general.values';
 
@@ -177,13 +178,22 @@ function checkUnfinishedRecipients() {
 
       <n-space class="w-full my-8" size="large" align="center" justify="space-between">
         <n-space size="large">
-          <Btn type="primary" @click="getUsers()"> Refresh </Btn>
-          <Btn @click="modalUploadCsvVisible = true"> Upload CSV </Btn>
-          <Btn type="secondary" @click="addRecipient"> Add recipient </Btn>
+          <Btn type="primary" class="text-black" @click="getUsers()"> Refresh </Btn>
+          <Btn :color="colors.blue" class="text-black" @click="modalUploadCsvVisible = true">
+            Upload CSV
+          </Btn>
+          <Btn type="secondary" @click="addRecipient">
+            <span class="text-black">Add recipient</span>
+          </Btn>
         </n-space>
 
         <div v-if="data && data.length" class="flex gap-4 items-center">
-          <Btn :disabled="!data || data.length === 0" @click="saveRecipients()">
+          <Btn
+            :color="colors.blue"
+            class="text-black"
+            :disabled="!data || data.length === 0"
+            @click="saveRecipients()"
+          >
             Save recipients
           </Btn>
         </div>
@@ -203,7 +213,9 @@ function checkUnfinishedRecipients() {
             Select and upload the CSV file containing addresses to which you wish to distribute
             NFTs.
           </p>
-          <Btn type="builders" size="tiny" href="/files/example.csv"> Download CSV sample </Btn>
+          <Btn type="builders" class="text-black" size="tiny" href="/files/example.csv">
+            Download CSV sample
+          </Btn>
         </div>
         <FormUpload @close="modalUploadCsvVisible = false" @proceed="onFileUploaded" />
       </div>

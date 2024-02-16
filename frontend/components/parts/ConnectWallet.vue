@@ -4,8 +4,8 @@
     <Btn
       v-if="isConnected && (!admin || userStore.jwt)"
       v-bind="$attrs"
-      class="text-white"
-      :color="colors.button"
+      class="text-black"
+      :color="colors.blue"
       :size="size"
       :loading="loading || isLoading"
       @click="disconnectWallet()"
@@ -15,8 +15,8 @@
     <Btn
       v-else-if="isConnected"
       v-bind="$attrs"
-      class="text-white"
-      :color="colors.button"
+      class="text-black"
+      :color="colors.blue"
       :size="size"
       :loading="loading || isLoading"
       @click="login()"
@@ -26,8 +26,8 @@
     <Btn
       v-else
       v-bind="$attrs"
-      class="text-white"
-      :color="colors.button"
+      class="text-black"
+      :color="colors.blue"
       :size="size"
       :loading="loading || isLoading"
       @click="modalWalletVisible = true"
