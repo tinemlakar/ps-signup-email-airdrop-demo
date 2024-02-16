@@ -58,16 +58,18 @@ export class Cron {
     const conn = await mysql.start();
 
     try {
-      const res = await conn.execute(
+      const users = await mysql.paramExecute(
         `SELECT * FROM user WHERE
           airdrop_status = ${AirdropStatus.PENDING}
           AND status = ${SqlModelStatus.ACTIVE}
           AND email_start_send_time < '${dateToSqlString(new Date())}'
           FOR UPDATE
         ;
-       `
+       `,
+        null,
+        conn
       );
-      const users = res[0] as Array<any>;
+
       const updates = [];
 
       for (let i = 0; i < users.length; i++) {
@@ -79,7 +81,9 @@ export class Cron {
               "Claim your NFT",
               "en-airdrop-claim",
               {
+                appUrl: env.APP_URL,
                 link: `${env.APP_URL}/claim?token=${token}`,
+                claimExpiresIn: env.CLAIM_EXPIRES_IN,
               }
             );
             updates.push(
@@ -93,7 +97,9 @@ export class Cron {
               [users[i].email],
               "You are in waiting line for NFT claim",
               "en-airdrop-waiting-line",
-              {}
+              {
+                appUrl: env.APP_URL,
+              }
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
@@ -119,13 +125,13 @@ export class Cron {
         airdrop_status = VALUES(airdrop_status),
         email_sent_time = VALUES(email_sent_time)`;
 
-        await conn.execute(sql);
+        await mysql.paramExecute(sql, null, conn);
       }
 
-      await conn.commit();
+      await mysql.commit(conn);
     } catch (e) {
       writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
-      await conn.rollback();
+      await mysql.rollback(conn);
     }
   }
 
@@ -134,25 +140,30 @@ export class Cron {
     const conn = await mysql.start();
 
     try {
-      const res = await conn.execute(
-        `SELECT * FROM user WHERE
+      const usersWithExpiredClaim = (
+        await mysql.paramExecute(
+          `SELECT * FROM user WHERE
           airdrop_status = ${AirdropStatus.EMAIL_SENT}
           AND status = ${SqlModelStatus.ACTIVE}
           AND DATE_ADD(email_sent_time, INTERVAL ${env.CLAIM_EXPIRES_IN} HOUR) < NOW()
           FOR UPDATE
         ;
-       `
-      );
-      const usersWithExpiredClaim = (res[0] as Array<any>).map((x) => x.id);
+       `,
+          null,
+          conn
+        )
+      ).map((x) => x.id);
 
       if (usersWithExpiredClaim.length) {
         //Update those users to claim expired
-        await conn.execute(
+        await mysql.paramExecute(
           `UPDATE user 
           SET airdrop_status = ${AirdropStatus.AIRDROP_CLAIM_EXPIRED}
           WHERE id IN (${usersWithExpiredClaim.join(",")})
         ;
-       `
+       `,
+          null,
+          conn
         );
         console.info(
           usersWithExpiredClaim.length +
@@ -161,7 +172,7 @@ export class Cron {
 
         //Get users in waiting line and set their airdrop status to PENDING, so that they will recieve email for claim
         const usersInWaitingLine = (
-          await conn.execute(
+          await mysql.paramExecute(
             `SELECT * FROM user WHERE
           airdrop_status = ${AirdropStatus.IN_WAITING_LINE}
           AND status = ${SqlModelStatus.ACTIVE}
@@ -169,7 +180,9 @@ export class Cron {
           LIMIT ${usersWithExpiredClaim.length}
           FOR UPDATE
         ;
-       `
+       `,
+            null,
+            conn
           )
         )[0] as Array<any>;
 
@@ -185,7 +198,9 @@ export class Cron {
                 email_sent_time = NOW()
                 WHERE id IN (${usersInWaitingLine.map((x) => x.id).join(",")})
               ;
-            `
+            `,
+            null,
+            conn
           );
           console.info(
             usersInWaitingLine.map((x) => x.id).join(",") +
@@ -216,10 +231,10 @@ export class Cron {
         }
       }
 
-      await conn.commit();
+      await mysql.commit(conn);
     } catch (e) {
       writeLog(LogType.ERROR, e, "cron.ts", "processExpiredClaims");
-      await conn.rollback();
+      await mysql.rollback(conn);
     }
   }
 }

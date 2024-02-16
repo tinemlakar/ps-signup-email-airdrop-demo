@@ -4,6 +4,8 @@
     <Btn
       v-if="isConnected && (!admin || userStore.jwt)"
       v-bind="$attrs"
+      class="text-black"
+      :color="colors.blue"
       :size="size"
       :loading="loading || isLoading"
       @click="disconnectWallet()"
@@ -13,6 +15,8 @@
     <Btn
       v-else-if="isConnected"
       v-bind="$attrs"
+      class="text-black"
+      :color="colors.blue"
       :size="size"
       :loading="loading || isLoading"
       @click="login()"
@@ -22,6 +26,8 @@
     <Btn
       v-else
       v-bind="$attrs"
+      class="text-black"
+      :color="colors.blue"
       :size="size"
       :loading="loading || isLoading"
       @click="modalWalletVisible = true"
@@ -40,6 +46,7 @@
 </template>
 
 <script lang="ts" setup>
+import colors from '~/tailwind.colors';
 import type { Size } from 'naive-ui/es/button/src/interface';
 import { useAccount, useConnect, useDisconnect, useWalletClient } from 'use-wagmi';
 
@@ -57,11 +64,7 @@ const { error } = useMessage();
 const userStore = useUserStore();
 const { handleError } = useErrors();
 
-const { connect, connectors, isLoading } = useConnect({
-  onSuccess: () => {
-    console.log('success');
-  },
-});
+const { connect, connectors, isLoading } = useConnect();
 const { data: walletClient, refetch } = useWalletClient();
 const { address, isConnected } = useAccount({ onConnect: loginDelay });
 const { disconnect } = useDisconnect();
