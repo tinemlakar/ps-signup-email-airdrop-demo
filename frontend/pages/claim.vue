@@ -100,8 +100,8 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
     <div v-if="!isConnected" class="my-8 text-center">
       <h3 class="mb-6">Almost there!</h3>
       <p>
-        But first, connect compatible digital wallet. This step is crucial for securely receiving
-        and managing the MENT token you’ll about to receive.
+        But first, connect a compatible digital wallet. This step is crucial
+        for securely receiving and managing the MENT token you’re about to receive.
       </p>
     </div>
 

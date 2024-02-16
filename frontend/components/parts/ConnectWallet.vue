@@ -32,7 +32,7 @@
       :loading="loading || isLoading"
       @click="modalWalletVisible = true"
     >
-      Connect wallet
+      Connect your wallet
     </Btn>
   </div>
 

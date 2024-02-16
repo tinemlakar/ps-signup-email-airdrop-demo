@@ -12,7 +12,7 @@ useHead({
       <span class="mb-2 inline-block text-xs font-bold uppercase tracking-[0.2em] text-info"
         >The Shape of MENT to Come</span
       >
-      <h1>Sign up and win your MENT token</h1>
+      <h1>Sign up and win one of 200 MENT tokens</h1>
 
       <p class="body-lg mb-6">
         By signing up, you’ll be in the game for the hottest perks in the form of MENT token
