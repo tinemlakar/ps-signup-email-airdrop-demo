@@ -2,9 +2,7 @@
 type Address = `0x${string}`;
 import SuccessSVG from '~/assets/images/success.svg';
 import colors from '~/tailwind.colors';
-import { useAccount, useConnect, useContractRead, useWalletClient } from 'use-wagmi';
-import { abi } from '~/lib/config/abi';
-import { getContractAddress } from 'viem';
+import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
 
 definePageMeta({
   layout: 'claim',

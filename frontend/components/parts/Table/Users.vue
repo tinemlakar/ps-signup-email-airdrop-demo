@@ -52,24 +52,6 @@ const createColumns = (): DataTableColumns<UserInterface> => {
       },
     },
     {
-      key: 'email_start_send_time',
-      title: 'Start time',
-      minWidth: 100,
-      render(row: UserInterface, index: number) {
-        if (isEditable(row, index)) {
-          return h(NDatePicker, {
-            value: newUser.value.email_start_send_time,
-            type: 'datetime',
-            onUpdateValue(v: string) {
-              newUser.value.email_start_send_time = v;
-            },
-          });
-        } else {
-          return dateTimeToDateAndTime(row?.email_start_send_time || '');
-        }
-      },
-    },
-    {
       key: 'wallet',
       title: 'Wallet',
       minWidth: 100,
@@ -129,15 +111,10 @@ function addItem(user: UserInterface) {
   if (!validateEmail(newUser.value.email)) {
     message.warning('Please enter a valid email address');
     return;
-  } else if (!newUser.value.email_start_send_time) {
-    message.warning('Please select start time');
-    return;
   }
 
   user.email = newUser.value.email;
-  user.email_start_send_time = newUser.value.email_start_send_time;
   newUser.value.email = '';
-  newUser.value.email_start_send_time = null;
 
   emit('addUser', newUser.value);
 }

@@ -51,7 +51,7 @@ function onFileUploaded(csvData: CsvItem[]) {
       airdrop_status: AirdropStatus.PENDING,
       email: item.email,
       email_sent_time: null,
-      email_start_send_time: item.email_start_send_time,
+      email_start_send_time: null,
       wallet: null,
     } as UserInterface;
   });
@@ -172,14 +172,12 @@ function checkUnfinishedRecipients() {
     <div class="w-full my-12 mx-auto">
       <h3 class="my-8">NFT Recipient Stock</h3>
 
-      <Statistics v-if="statistics" :statistics="statistics" />    
-      <Btn type="primary" @click="getUsers()">
-        Refresh
-      </Btn>
+      <Statistics v-if="statistics" :statistics="statistics" />
       <TableUsers v-if="data" :users="data" @add-user="onUserAdded" @remove-user="onUserRemove" />
 
       <n-space class="w-full my-8" size="large" align="center" justify="space-between">
         <n-space size="large">
+          <Btn type="primary" @click="getUsers()"> Refresh </Btn>
           <Btn @click="modalUploadCsvVisible = true"> Upload CSV </Btn>
           <Btn type="secondary" @click="addRecipient"> Add recipient </Btn>
         </n-space>

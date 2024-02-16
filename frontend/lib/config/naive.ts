@@ -164,7 +164,7 @@ export const NaiveTheme: GlobalThemeOverrides = {
     borderColor: colors.bg.lighter,
     tdColor: colors.bg.DEFAULT,
     tdColorHover: colors.bg.dark,
-    tdTextColor: colors.body,
+    tdTextColor: colors.white,
     thColor: colors.bg.DEFAULT,
     thColorHover: colors.bg.DEFAULT,
     thFontWeight: '700',
