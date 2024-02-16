@@ -38,7 +38,7 @@ export class Cron {
 
     let availableNftLeft = 0;
     if (env.MAX_SUPPLY) {
-      const res = await mysql.db.execute(
+      const res = await mysql.paramExecute(
         `SELECT COUNT(id) as total FROM user WHERE
           airdrop_status IN (
             ${AirdropStatus.EMAIL_SENT},
@@ -51,7 +51,7 @@ export class Cron {
         ;
        `
       );
-      const numOfReservations = res[0][0].total;
+      const numOfReservations = res[0].total;
       availableNftLeft = env.MAX_SUPPLY - numOfReservations;
     }
 
@@ -171,9 +171,8 @@ export class Cron {
         );
 
         //Get users in waiting line and set their airdrop status to PENDING, so that they will recieve email for claim
-        const usersInWaitingLine = (
-          await mysql.paramExecute(
-            `SELECT * FROM user WHERE
+        const usersInWaitingLine = await mysql.paramExecute(
+          `SELECT * FROM user WHERE
           airdrop_status = ${AirdropStatus.IN_WAITING_LINE}
           AND status = ${SqlModelStatus.ACTIVE}
           ORDER BY createTime ASC
@@ -181,10 +180,9 @@ export class Cron {
           FOR UPDATE
         ;
        `,
-            null,
-            conn
-          )
-        )[0] as Array<any>;
+          null,
+          conn
+        );
 
         console.info(
           'Num of users in waiting line: ' + usersInWaitingLine.length
