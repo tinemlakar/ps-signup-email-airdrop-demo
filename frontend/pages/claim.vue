@@ -8,7 +8,7 @@ definePageMeta({
   layout: 'claim',
 });
 useHead({
-  title: 'MENT NFT airdrop',
+  title: 'MENT token airdrop',
 });
 
 const { query } = useRoute();
@@ -122,7 +122,7 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
       :loading="loading"
       @click="claimAirdrop()"
     >
-      Claim your MENT token
+      <span class="text-black">Claim your MENT token</span>
     </Btn>
   </div>
 </template>

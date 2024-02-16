@@ -118,13 +118,12 @@ function onCaptchaVerify(token: string) {
       <Btn
         type="primary"
         size="large"
-        class="text-black"
         :color="colors.blue"
         :loading="loading"
         :disabled="!formData.email || !formData.token || !formData.termsAndConditions"
         @click="handleSubmit"
       >
-        Sign up
+        <span class="text-black">Sign up</span>
       </Btn>
     </n-form-item>
 

@@ -38,7 +38,7 @@ export class Cron {
 
     let availableNftLeft = 0;
     if (env.MAX_SUPPLY) {
-      const res = await mysql.db.execute(
+      const res = await mysql.paramExecute(
         `SELECT COUNT(id) as total FROM user WHERE
           airdrop_status IN (
             ${AirdropStatus.EMAIL_SENT},
@@ -51,7 +51,7 @@ export class Cron {
         ;
        `
       );
-      const numOfReservations = res[0][0].total;
+      const numOfReservations = res[0].total;
       availableNftLeft = env.MAX_SUPPLY - numOfReservations;
     }
 
@@ -78,13 +78,14 @@ export class Cron {
             const token = await generateEmailAirdropToken(users[i].email);
             await SmtpSendTemplate(
               [users[i].email],
-              'Claim your NFT',
+              'Claim your MENT token',
               'en-airdrop-claim',
               {
                 appUrl: env.APP_URL,
                 link: `${env.APP_URL}/claim?token=${token}`,
                 claimExpiresIn: env.CLAIM_EXPIRES_IN,
-              }
+              },
+              'MENT',
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
@@ -95,11 +96,12 @@ export class Cron {
             //Currently, waiting line for airdrop is full.Send info email and set appropriate status
             await SmtpSendTemplate(
               [users[i].email],
-              'You are in waiting line for NFT claim',
+              'You have been placed on a waitlist for MENT token',
               'en-airdrop-waiting-line',
               {
                 appUrl: env.APP_URL,
-              }
+              },
+              'MENT'
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
@@ -171,9 +173,8 @@ export class Cron {
         );
 
         //Get users in waiting line and set their airdrop status to PENDING, so that they will recieve email for claim
-        const usersInWaitingLine = (
-          await mysql.paramExecute(
-            `SELECT * FROM user WHERE
+        const usersInWaitingLine = await mysql.paramExecute(
+          `SELECT * FROM user WHERE
           airdrop_status = ${AirdropStatus.IN_WAITING_LINE}
           AND status = ${SqlModelStatus.ACTIVE}
           ORDER BY createTime ASC
@@ -181,10 +182,9 @@ export class Cron {
           FOR UPDATE
         ;
        `,
-            null,
-            conn
-          )
-        )[0] as Array<any>;
+          null,
+          conn
+        );
 
         console.info(
           'Num of users in waiting line: ' + usersInWaitingLine.length

@@ -3,7 +3,7 @@ import { prepareOG } from '~/lib/utils/helpers';
 import { Chains } from '~/lib/values/general.values';
 
 useHead({
-  title: 'PINK PASS',
+  title: 'MENT token airdrop',
 });
 
 const router = useRouter();
