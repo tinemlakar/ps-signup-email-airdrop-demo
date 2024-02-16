@@ -128,12 +128,11 @@ function onCaptchaVerify(token: string) {
       </Btn>
     </n-form-item>
 
-      <modal
+    <modal
       :show="modalTermsAndConditionsVisible"
-      @close="() => (modalTermsAndConditionsVisible = false)"
       @update:show="modalTermsAndConditionsVisible = false"
     >
-      <TermsAndConditions />
+      <TermsAndConditions @close="() => (modalTermsAndConditionsVisible = false)"/>
     </modal>
   </n-form>
 </template>

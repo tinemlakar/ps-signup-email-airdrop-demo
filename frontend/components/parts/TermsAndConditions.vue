@@ -44,9 +44,21 @@
         </div>
       </n-scrollbar>
     </div>
+    <btn
+      type="primary"
+      size="large"
+      class="text-white"
+      :color="colors.button"
+      @click="$emit('close', false)"
+    >
+      Close
+    </btn>
   </div>
 </template>
 
 <script setup lang="ts">
 import LogoPNG from '/images/logo/MENT_Logo-01.png';
+import colors from '~/tailwind.colors';
+
+const emits = defineEmits(['close']);
 </script>
