@@ -15,7 +15,7 @@ let token;
 describe("get user", () => {
   beforeAll(async () => {
     stage = await createContextAndStartServer();
-    token = generateAdminAuthToken(env.ADMIN_WALLET);
+    token = generateAdminAuthToken(env.ADMIN_WALLET[0]);
     await setupTestDatabase();
     await new User({}, stage.context).fake().create();
   });

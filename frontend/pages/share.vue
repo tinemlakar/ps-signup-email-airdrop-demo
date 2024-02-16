@@ -58,7 +58,7 @@ function transactionLink(transactionHash?: string | null): string {
     <div class="rounded-lg overflow-hidden mb-8">
       <img :src="metadata.image" class="" width="400" height="400" alt="nft" />
 
-      <div class="p-6 bg-bg-lighter">
+      <div class="p-6 bg-bg-light">
         <h5>{{ metadata.name }}</h5>
       </div>
       <div class="mt-4 text-center">
@@ -80,8 +80,8 @@ function transactionLink(transactionHash?: string | null): string {
       :href="`https://twitter.com/intent/tweet?text=Just minted my ${metadata.name} NFT on nft.ment.si!&url=https://nft.ment.si/`"
     >
       <span class="inline-flex gap-2 items-center">
-        <NuxtIcon name="x" class="text-xl" />
-        <span>Share on X</span>
+        <NuxtIcon name="x" class="text-xl text-black" />
+        <span class="text-black">Share on X</span>
       </span>
     </Btn>
   </div>

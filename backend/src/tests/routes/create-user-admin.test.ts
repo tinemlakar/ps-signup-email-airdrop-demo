@@ -12,7 +12,7 @@ let token;
 
 describe("create user", () => {
   beforeAll(async () => {
-    token = generateAdminAuthToken(env.ADMIN_WALLET);
+    token = generateAdminAuthToken(env.ADMIN_WALLET[0]);
     stage = await createContextAndStartServer();
     await setupTestDatabase();
   });

@@ -1,15 +1,14 @@
 <script lang="ts" setup>
 type Address = `0x${string}`;
 import SuccessSVG from '~/assets/images/success.svg';
-import { useAccount, useConnect, useContractRead, useWalletClient } from 'use-wagmi';
-import { abi } from '~/lib/config/abi';
-import { getContractAddress } from 'viem';
+import colors from '~/tailwind.colors';
+import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
 
 definePageMeta({
   layout: 'claim',
 });
 useHead({
-  title: 'Apillon email airdrop prebuilt solution',
+  title: 'MENT NFT airdrop',
 });
 
 const { query } = useRoute();
@@ -41,7 +40,7 @@ async function claimAirdrop() {
       await connect({ connector: connectors.value[0] });
 
       if (!walletClient.value) {
-        message.error('Could not connect with wallet');
+        message.error('Could not connect with your wallet.');
         loading.value = false;
         return;
       }
@@ -58,11 +57,11 @@ async function claimAirdrop() {
       txWait.hash.value = res.data.transactionHash as Address;
 
       console.debug('Transaction', txWait.hash.value);
-      message.info('Minting of your NFT has begun.');
+      message.info('Minting of your MENT token has begun.');
 
       const receipt = await txWait.wait();
       console.debug(receipt);
-      message.success('You successfully claimed NFT');
+      message.success("You've successfully claimed your MENT token.");
 
       if (receipt.data?.to && receipt.data?.logs[0].topics[3]) {
         const nftId = Number(receipt.data?.logs[0].topics[3]);
@@ -101,8 +100,8 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
     <div v-if="!isConnected" class="my-8 text-center">
       <h3 class="mb-6">Almost there!</h3>
       <p>
-        But first, connect compatible digital wallet. This step is crucial for securely receiving
-        and managing the MENT token you’ll about to receive.
+        But first, connect a compatible digital wallet. This step is crucial
+        for securely receiving and managing the MENT token you’re about to receive.
       </p>
     </div>
 
@@ -115,6 +114,15 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
     </div>
 
     <ConnectWallet v-if="!isConnected" size="large" />
-    <Btn v-else size="large" :loading="loading" @click="claimAirdrop()">Claim your MENT token</Btn>
+    <Btn
+      v-else
+      size="large"
+      class="text-black"
+      :color="colors.blue"
+      :loading="loading"
+      @click="claimAirdrop()"
+    >
+      Claim your MENT token
+    </Btn>
   </div>
 </template>

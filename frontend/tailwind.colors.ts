@@ -1,6 +1,6 @@
 /** This is copy of Tailwind custom colors */
 export default {
-  primary: '#91331F',
+  primary: '#74A8D6',
   secondary: '#78DCE8',
 
   transparent: 'transparent',
@@ -12,7 +12,7 @@ export default {
   pink: '#FF6188',
   green: '#87CBAC',
   violet: '#AB9DF2',
-  blue: '#73AEE5',
+  blue: '#74A8D6',
   discord: '#4554E9',
 
   lineup: '#CBAB25',
@@ -21,8 +21,9 @@ export default {
   sprejemi: '#15D0AB',
   specialke: '#DD73DD',
   info: '#E9E8C4',
+  button: '#AC56AC',
 
-  body: '#9D9E91',
+  body: '#000',
   bodyDark: '#6A6B63',
 
   bg: {
@@ -30,6 +31,6 @@ export default {
     lighter: '#313442',
     light: '#ba9d22',
     DEFAULT: '#CBAB25',
-    dark: '#06080F',
+    dark: '#ba9d22',
   },
 };

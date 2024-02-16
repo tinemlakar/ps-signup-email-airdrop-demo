@@ -24,8 +24,12 @@ export async function resolve(req: Request, res: Response): Promise<void> {
 
   const identity = new Identity(null);
 
+  if (!context.env.ADMIN_WALLET.includes(body.address?.toLowerCase())) {
+    throw new ResourceError(RouteErrorCode.INVALID_ADMIN, context);
+  }
+
   const { isValid } = await identity.validateEvmWalletSignature({
-    walletAddress: context.env.ADMIN_WALLET,
+    walletAddress: body.address,
     signature: body.signature,
     signatureValidityMinutes: 10,
     message: `Sign to verify and mint your free Ment NFT!\n${body.timestamp}`,
@@ -33,7 +37,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   });
 
   if (isValid) {
-    const jwt = generateAdminAuthToken(context.env.ADMIN_WALLET);
+    const jwt = generateAdminAuthToken(body.address);
     return res.respond(200, { jwt });
   } else {
     throw new ResourceError(RouteErrorCode.USER_DOES_NOT_EXIST, context);

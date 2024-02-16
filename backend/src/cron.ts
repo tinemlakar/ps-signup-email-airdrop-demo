@@ -14,7 +14,9 @@ export class Cron {
   constructor() {
     this.cronJobs.push(new CronJob('* * * * *', this.sendEmail, null, false));
     if (env.MAX_SUPPLY > 0) {
-      this.cronJobs.push(new CronJob('* * * * *', this.processExpiredClaims, null, false));
+      this.cronJobs.push(
+        new CronJob('* * * * *', this.processExpiredClaims, null, false)
+      );
     }
   }
 
@@ -42,7 +44,8 @@ export class Cron {
             ${AirdropStatus.EMAIL_SENT},
             ${AirdropStatus.WALLET_LINKED},
             ${AirdropStatus.TRANSACTION_CREATED},
-            ${AirdropStatus.AIRDROP_COMPLETED}
+            ${AirdropStatus.AIRDROP_COMPLETED},
+            ${AirdropStatus.IN_WAITING_LINE}
           )
           AND status = ${SqlModelStatus.ACTIVE}
         ;
@@ -73,10 +76,16 @@ export class Cron {
         try {
           if (!env.MAX_SUPPLY || i < availableNftLeft) {
             const token = await generateEmailAirdropToken(users[i].email);
-            await SmtpSendTemplate([users[i].email], 'Claim your NFT', 'en-airdrop-claim', {
-              appUrl: env.APP_URL,
-              link: `${env.APP_URL}/claim?token=${token}`,
-            });
+            await SmtpSendTemplate(
+              [users[i].email],
+              'Claim your NFT',
+              'en-airdrop-claim',
+              {
+                appUrl: env.APP_URL,
+                link: `${env.APP_URL}/claim?token=${token}`,
+                claimExpiresIn: env.CLAIM_EXPIRES_IN,
+              }
+            );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
                 AirdropStatus.EMAIL_SENT
@@ -101,9 +110,9 @@ export class Cron {
         } catch (e) {
           writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
           updates.push(
-            `(${users[i].id}, '${users[i].email}', ${AirdropStatus.EMAIL_ERROR}, '${dateToSqlString(
-              new Date()
-            )}')`
+            `(${users[i].id}, '${users[i].email}', ${
+              AirdropStatus.EMAIL_ERROR
+            }, '${dateToSqlString(new Date())}')`
           );
         }
       }
@@ -143,7 +152,7 @@ export class Cron {
           null,
           conn
         )
-      ).map(x => x.id);
+      ).map((x) => x.id);
 
       if (usersWithExpiredClaim.length) {
         //Update those users to claim expired
@@ -156,6 +165,10 @@ export class Cron {
           null,
           conn
         );
+        console.info(
+          usersWithExpiredClaim.length +
+            ' users updated to AIRDROP_CLAIM_EXPIRED'
+        );
 
         //Get users in waiting line and set their airdrop status to PENDING, so that they will recieve email for claim
         const usersInWaitingLine = (
@@ -163,6 +176,7 @@ export class Cron {
             `SELECT * FROM user WHERE
           airdrop_status = ${AirdropStatus.IN_WAITING_LINE}
           AND status = ${SqlModelStatus.ACTIVE}
+          ORDER BY createTime ASC
           LIMIT ${usersWithExpiredClaim.length}
           FOR UPDATE
         ;
@@ -172,16 +186,50 @@ export class Cron {
           )
         )[0] as Array<any>;
 
+        console.info(
+          'Num of users in waiting line: ' + usersInWaitingLine.length
+        );
+
         if (usersInWaitingLine.length) {
           await mysql.paramExecute(
             `UPDATE user 
-                SET airdrop_status = ${AirdropStatus.PENDING}
-                WHERE id IN (${usersInWaitingLine.map(x => x.id).join(',')})
+                SET 
+                airdrop_status = ${AirdropStatus.EMAIL_SENT},
+                email_sent_time = NOW()
+                WHERE id IN (${usersInWaitingLine.map((x) => x.id).join(',')})
               ;
             `,
             null,
             conn
           );
+          console.info(
+            usersInWaitingLine.map((x) => x.id).join(',') +
+              ' should me moved from waiting line. Sending emails....'
+          );
+
+          for (const user of usersInWaitingLine) {
+            try {
+              const token = await generateEmailAirdropToken(user.email);
+              await SmtpSendTemplate(
+                [user.email],
+                'Claim your NFT',
+                'en-airdrop-claim',
+                {
+                  link: `${env.APP_URL}/claim?token=${token}`,
+                }
+              );
+            } catch (err) {
+              await mysql.paramExecute(
+                `UPDATE user 
+                  SET airdrop_status = ${AirdropStatus.EMAIL_ERROR},
+                  WHERE id = ${user.id})
+              ;
+            `,
+                null,
+                conn
+              );
+            }
+          }
         }
       }
 

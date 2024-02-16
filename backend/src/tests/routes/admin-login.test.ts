@@ -14,7 +14,7 @@ describe('admin login', () => {
   beforeAll(async () => {
     adminWallet = Wallet.createRandom();
     stage = await createContextAndStartServer({
-      ADMIN_WALLET: adminWallet.address,
+      ADMIN_WALLET: [adminWallet.address.toLowerCase()],
     });
     await setupTestDatabase();
   });

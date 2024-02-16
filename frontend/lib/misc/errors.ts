@@ -65,6 +65,7 @@ export const ErrorCodes = {
   400005: 'Missing signature',
   400006: 'Token does not exists',
   400007: 'NFT already claimed',
+  400008: 'Invalid admin',
   403001: 'Missing auth token, please login!',
   403002: 'UNKNOWN USER',
   403003: 'UNAUTHORIZED',
@@ -76,6 +77,8 @@ export const ErrorCodes = {
   422005: 'Captcha not configured!',
   422006: 'Please solve captcha',
   422007: 'Captcha error, please solver captcha again',
+  422008: 'User already minted',
+  422009: 'Wallet belongs to another user, please login with different wallet',
 
   // SystemErrorCode
   500000: 'DEFAULT_SYSTEM_ERROR',
