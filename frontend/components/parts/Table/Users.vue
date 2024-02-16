@@ -108,13 +108,13 @@ const createColumns = (): DataTableColumns<UserInterface> => {
         if (isEditable(row, index)) {
           return h(
             'button',
-            { class: 'icon-check text-xl text-green', onClick: () => addItem(row) },
+            { class: 'icon-check text-xl text-konference', onClick: () => addItem(row) },
             ''
           );
         } else if (!row.id) {
           return h(
             'button',
-            { class: 'icon-delete text-xl text-white', onClick: () => removeItem(row) },
+            { class: 'icon-delete text-xl text-black', onClick: () => removeItem(row) },
             ''
           );
         }
