@@ -12,6 +12,7 @@ import { dateParser, integerParser, stringParser } from "@rawmodel/parsers";
 import { Context } from "../context";
 import { ResourceError, SqlError } from "../lib/errors";
 import { getQueryParams, selectAndCountQuery } from "../lib/sql-utils";
+import { env } from "../config/env";
 
 export enum AirdropStatus {
   PENDING = 1,
@@ -201,6 +202,7 @@ export class User extends BaseSqlModel {
       `
       SELECT 
       count(*) as total,
+      ${env.MAX_SUPPLY} as maxSupply,
         SUM(IF(airdrop_status = 1, 1, 0)) as pending,
         SUM(IF(airdrop_status in (2,4,5,6,7), 1, 0)) as emailSent,
         SUM(IF(airdrop_status in (4,5,6,7), 1, 0)) as walletLinked,

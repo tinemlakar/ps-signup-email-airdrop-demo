@@ -47,8 +47,8 @@
     <btn
       type="primary"
       size="large"
-      class="text-white"
-      :color="colors.button"
+      class="text-black"
+      :color="colors.blue"
       @click="$emit('close', false)"
     >
       Close
