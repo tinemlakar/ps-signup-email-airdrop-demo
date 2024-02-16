@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 type Address = `0x${string}`;
 import SuccessSVG from '~/assets/images/success.svg';
+import colors from '~/tailwind.colors';
 import { useAccount, useConnect, useContractRead, useWalletClient } from 'use-wagmi';
 import { abi } from '~/lib/config/abi';
 import { getContractAddress } from 'viem';
@@ -9,7 +10,7 @@ definePageMeta({
   layout: 'claim',
 });
 useHead({
-  title: 'Apillon email airdrop prebuilt solution',
+  title: 'MENT NFT airdrop',
 });
 
 const { query } = useRoute();
@@ -115,6 +116,15 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
     </div>
 
     <ConnectWallet v-if="!isConnected" size="large" />
-    <Btn v-else size="large" :loading="loading" @click="claimAirdrop()">Claim your MENT token</Btn>
+    <Btn
+      v-else
+      size="large"
+      class="text-white"
+      :color="colors.button"
+      :loading="loading"
+      @click="claimAirdrop()"
+    >
+      Claim your MENT token
+    </Btn>
   </div>
 </template>

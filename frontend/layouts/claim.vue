@@ -6,7 +6,7 @@
     <div class="container h-full pb-8 lg:pb-24 flex flex-col justify-center" :style="containerStyle">
       <slot />
     </div>
-    <div>
+    <div ref="footerRef" class="justify-center">
       <Footer />
     </div>
   </n-layout>
@@ -15,10 +15,13 @@
 <script lang="ts" setup>
 /** Heading height */
 const headerRef = ref<HTMLElement>();
+const footerRef = ref<HTMLElement>();
 
 const containerStyle = computed(() => {
+  const hHeight = headerRef.value?.clientHeight || 0;
+  const fHeight = footerRef.value?.clientHeight || 0;
   return {
-    minHeight: `calc(100dvh - ${headerRef.value?.clientHeight || 0}px)`,
+    minHeight: `calc(100dvh - ${hHeight + fHeight}px)`,
   };
 });
 </script>

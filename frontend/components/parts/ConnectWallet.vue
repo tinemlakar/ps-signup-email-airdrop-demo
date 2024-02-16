@@ -4,6 +4,8 @@
     <Btn
       v-if="isConnected && (!admin || userStore.jwt)"
       v-bind="$attrs"
+      class="text-white"
+      :color="colors.button"
       :size="size"
       :loading="loading || isLoading"
       @click="disconnectWallet()"
@@ -13,6 +15,8 @@
     <Btn
       v-else-if="isConnected"
       v-bind="$attrs"
+      class="text-white"
+      :color="colors.button"
       :size="size"
       :loading="loading || isLoading"
       @click="login()"
@@ -22,6 +26,8 @@
     <Btn
       v-else
       v-bind="$attrs"
+      class="text-white"
+      :color="colors.button"
       :size="size"
       :loading="loading || isLoading"
       @click="modalWalletVisible = true"
@@ -40,6 +46,7 @@
 </template>
 
 <script lang="ts" setup>
+import colors from '~/tailwind.colors';
 import type { Size } from 'naive-ui/es/button/src/interface';
 import { useAccount, useConnect, useDisconnect, useWalletClient } from 'use-wagmi';
 
