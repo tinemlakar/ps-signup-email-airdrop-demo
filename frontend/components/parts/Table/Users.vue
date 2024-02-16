@@ -109,7 +109,7 @@ const columns = createColumns();
 
 function addItem(user: UserInterface) {
   if (!validateEmail(newUser.value.email)) {
-    message.warning('Please enter a valid email address');
+    message.warning('Please enter a valid email address.');
     return;
   }
 
