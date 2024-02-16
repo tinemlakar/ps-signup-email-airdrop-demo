@@ -8,7 +8,7 @@ definePageMeta({
   layout: 'admin',
 });
 useHead({
-  title: 'Apillon email airdrop prebuilt solution',
+  title: 'MENT token airdrop',
 });
 
 const message = useMessage();

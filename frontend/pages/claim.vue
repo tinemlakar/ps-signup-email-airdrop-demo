@@ -8,7 +8,7 @@ definePageMeta({
   layout: 'claim',
 });
 useHead({
-  title: 'MENT NFT airdrop',
+  title: 'MENT token airdrop',
 });
 
 const { query } = useRoute();
