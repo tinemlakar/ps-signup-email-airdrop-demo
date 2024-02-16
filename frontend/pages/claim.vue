@@ -40,7 +40,7 @@ async function claimAirdrop() {
       await connect({ connector: connectors.value[0] });
 
       if (!walletClient.value) {
-        message.error('Could not connect with wallet');
+        message.error('Could not connect with your wallet.');
         loading.value = false;
         return;
       }
@@ -57,11 +57,11 @@ async function claimAirdrop() {
       txWait.hash.value = res.data.transactionHash as Address;
 
       console.debug('Transaction', txWait.hash.value);
-      message.info('Minting of your NFT has begun.');
+      message.info('Minting of your MENT token has begun.');
 
       const receipt = await txWait.wait();
       console.debug(receipt);
-      message.success('You successfully claimed NFT');
+      message.success("You've successfully claimed your MENT token.");
 
       if (receipt.data?.to && receipt.data?.logs[0].topics[3]) {
         const nftId = Number(receipt.data?.logs[0].topics[3]);
