@@ -32,7 +32,7 @@
       :loading="loading || isLoading"
       @click="modalWalletVisible = true"
     >
-      Connect wallet
+      Connect your wallet
     </Btn>
   </div>
 
@@ -105,7 +105,7 @@ async function login() {
     }
 
     const timestamp = new Date().getTime();
-    const message = 'test';
+    const message = 'Sign to verify and mint your free Ment NFT!';
 
     const signature = await walletClient.value.signMessage({
       message: `${message}\n${timestamp}`,

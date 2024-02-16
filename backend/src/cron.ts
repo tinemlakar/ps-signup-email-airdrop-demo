@@ -1,21 +1,21 @@
-import { CronJob } from "cron";
-import { AirdropStatus } from "./models/user";
-import { dateToSqlString } from "./lib/sql-utils";
-import { SqlModelStatus } from "./models/base-sql-model";
-import { MysqlConnectionManager } from "./lib/mysql-connection-manager";
-import { SmtpSendTemplate } from "./lib/node-mailer";
-import { env } from "./config/env";
-import { generateEmailAirdropToken } from "./lib/jwt";
-import { LogType, writeLog } from "./lib/logger";
+import { CronJob } from 'cron';
+import { AirdropStatus } from './models/user';
+import { dateToSqlString } from './lib/sql-utils';
+import { SqlModelStatus } from './models/base-sql-model';
+import { MysqlConnectionManager } from './lib/mysql-connection-manager';
+import { SmtpSendTemplate } from './lib/node-mailer';
+import { env } from './config/env';
+import { generateEmailAirdropToken } from './lib/jwt';
+import { LogType, writeLog } from './lib/logger';
 
 export class Cron {
   private cronJobs: CronJob[] = [];
 
   constructor() {
-    this.cronJobs.push(new CronJob("* * * * *", this.sendEmail, null, false));
+    this.cronJobs.push(new CronJob('* * * * *', this.sendEmail, null, false));
     if (env.MAX_SUPPLY > 0) {
       this.cronJobs.push(
-        new CronJob("* * * * *", this.processExpiredClaims, null, false)
+        new CronJob('* * * * *', this.processExpiredClaims, null, false)
       );
     }
   }
@@ -78,8 +78,8 @@ export class Cron {
             const token = await generateEmailAirdropToken(users[i].email);
             await SmtpSendTemplate(
               [users[i].email],
-              "Claim your NFT",
-              "en-airdrop-claim",
+              'Claim your NFT',
+              'en-airdrop-claim',
               {
                 appUrl: env.APP_URL,
                 link: `${env.APP_URL}/claim?token=${token}`,
@@ -95,8 +95,8 @@ export class Cron {
             //Currently, waiting line for airdrop is full.Send info email and set appropriate status
             await SmtpSendTemplate(
               [users[i].email],
-              "You are in waiting line for NFT claim",
-              "en-airdrop-waiting-line",
+              'You are in waiting line for NFT claim',
+              'en-airdrop-waiting-line',
               {
                 appUrl: env.APP_URL,
               }
@@ -108,7 +108,7 @@ export class Cron {
             );
           }
         } catch (e) {
-          writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
+          writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
           updates.push(
             `(${users[i].id}, '${users[i].email}', ${
               AirdropStatus.EMAIL_ERROR
@@ -120,7 +120,7 @@ export class Cron {
       if (updates.length > 0) {
         const sql = `
         INSERT INTO user (id, email, airdrop_status, email_sent_time)
-        VALUES ${updates.join(",")}
+        VALUES ${updates.join(',')}
         ON DUPLICATE KEY UPDATE
         airdrop_status = VALUES(airdrop_status),
         email_sent_time = VALUES(email_sent_time)`;
@@ -130,7 +130,7 @@ export class Cron {
 
       await mysql.commit(conn);
     } catch (e) {
-      writeLog(LogType.ERROR, e, "cron.ts", "sendEmail");
+      writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
       await mysql.rollback(conn);
     }
   }
@@ -159,7 +159,7 @@ export class Cron {
         await mysql.paramExecute(
           `UPDATE user 
           SET airdrop_status = ${AirdropStatus.AIRDROP_CLAIM_EXPIRED}
-          WHERE id IN (${usersWithExpiredClaim.join(",")})
+          WHERE id IN (${usersWithExpiredClaim.join(',')})
         ;
        `,
           null,
@@ -167,7 +167,7 @@ export class Cron {
         );
         console.info(
           usersWithExpiredClaim.length +
-            " users updated to AIRDROP_CLAIM_EXPIRED"
+            ' users updated to AIRDROP_CLAIM_EXPIRED'
         );
 
         //Get users in waiting line and set their airdrop status to PENDING, so that they will recieve email for claim
@@ -187,24 +187,24 @@ export class Cron {
         )[0] as Array<any>;
 
         console.info(
-          "Num of users in waiting line: " + usersInWaitingLine.length
+          'Num of users in waiting line: ' + usersInWaitingLine.length
         );
 
         if (usersInWaitingLine.length) {
-          await conn.execute(
+          await mysql.paramExecute(
             `UPDATE user 
                 SET 
                 airdrop_status = ${AirdropStatus.EMAIL_SENT},
                 email_sent_time = NOW()
-                WHERE id IN (${usersInWaitingLine.map((x) => x.id).join(",")})
+                WHERE id IN (${usersInWaitingLine.map((x) => x.id).join(',')})
               ;
             `,
             null,
             conn
           );
           console.info(
-            usersInWaitingLine.map((x) => x.id).join(",") +
-              " should me moved from waiting line. Sending emails...."
+            usersInWaitingLine.map((x) => x.id).join(',') +
+              ' should me moved from waiting line. Sending emails....'
           );
 
           for (const user of usersInWaitingLine) {
@@ -212,19 +212,21 @@ export class Cron {
               const token = await generateEmailAirdropToken(user.email);
               await SmtpSendTemplate(
                 [user.email],
-                "Claim your NFT",
-                "en-airdrop-claim",
+                'Claim your NFT',
+                'en-airdrop-claim',
                 {
                   link: `${env.APP_URL}/claim?token=${token}`,
                 }
               );
             } catch (err) {
-              await conn.execute(
+              await mysql.paramExecute(
                 `UPDATE user 
                   SET airdrop_status = ${AirdropStatus.EMAIL_ERROR},
                   WHERE id = ${user.id})
               ;
-            `
+            `,
+                null,
+                conn
               );
             }
           }
@@ -233,7 +235,7 @@ export class Cron {
 
       await mysql.commit(conn);
     } catch (e) {
-      writeLog(LogType.ERROR, e, "cron.ts", "processExpiredClaims");
+      writeLog(LogType.ERROR, e, 'cron.ts', 'processExpiredClaims');
       await mysql.rollback(conn);
     }
   }

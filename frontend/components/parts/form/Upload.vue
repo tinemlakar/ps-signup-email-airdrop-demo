@@ -63,7 +63,7 @@ const hasRequiredColumns = computed<boolean>(() =>
 function uploadFileRequest({ file, onError, onFinish }: UploadCustomRequestOptions) {
   if (file.type !== 'text/csv' && file.type !== 'application/vnd.ms-excel') {
     console.warn(file.type);
-    message.warning('File must be of type CSV');
+    message.warning('File must be of CSV type.');
 
     /** Mark file as failed */
     onError();
