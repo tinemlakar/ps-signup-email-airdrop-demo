@@ -122,7 +122,7 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
       :loading="loading"
       @click="claimAirdrop()"
     >
-      Claim your MENT token
+      <span class="text-black">Claim your MENT token</span>
     </Btn>
   </div>
 </template>

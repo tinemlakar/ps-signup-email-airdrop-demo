@@ -10,7 +10,7 @@
       :loading="loading || isLoading"
       @click="disconnectWallet()"
     >
-      Disconnect
+      <span class="text-black">Disconnect</span>
     </Btn>
     <Btn
       v-else-if="isConnected"
@@ -21,7 +21,7 @@
       :loading="loading || isLoading"
       @click="login()"
     >
-      Login
+      <span class="text-black">Login</span>
     </Btn>
     <Btn
       v-else
@@ -32,7 +32,7 @@
       :loading="loading || isLoading"
       @click="modalWalletVisible = true"
     >
-      Connect your wallet
+      <span class="text-black">Connect your wallet</span>
     </Btn>
   </div>
 
