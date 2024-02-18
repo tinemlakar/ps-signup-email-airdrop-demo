@@ -215,7 +215,9 @@ export class Cron {
                 'Claim your NFT',
                 'en-airdrop-claim',
                 {
+                  appUrl: env.APP_URL,
                   link: `${env.APP_URL}/claim?token=${token}`,
+                  claimExpiresIn: env.CLAIM_EXPIRES_IN,
                 }
               );
             } catch (err) {
