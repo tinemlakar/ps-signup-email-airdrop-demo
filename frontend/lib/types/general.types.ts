@@ -6,6 +6,8 @@ declare global {
     API_BASE: string;
     CHAIN_ID: number;
     CAPTCHA_KEY: string;
+    METADATA_BASE_URI: string | null;
+    METADATA_TOKEN: string | null;
   }
 
   type AuthResponseProfile = {
