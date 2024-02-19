@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import SuperRareJpg from '~/assets/images/superrare.jpg';
 
+const { isMd } = useScreen();
+
 useHead({
   title: 'MENT token airdrop',
 });
@@ -21,7 +23,7 @@ useHead({
         <FormSighUp btn-text="Sign up" />
       </div>
     </div>
-    <div class="flex-cc relative w-full">
+    <div v-if="isMd" class="flex-cc relative w-full">
       <img :src="SuperRareJpg" class="mx-auto" width="461" height="461" alt="Super rare NFT" />
     </div>
   </div>

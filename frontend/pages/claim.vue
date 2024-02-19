@@ -11,6 +11,7 @@ useHead({
   title: 'MENT token airdrop',
 });
 
+const config = useRuntimeConfig();
 const { query } = useRoute();
 const router = useRouter();
 const message = useMessage();
@@ -46,7 +47,9 @@ async function claimAirdrop() {
       }
     }
 
-    const signature = await walletClient.value.signMessage({ message: `Sign to verify and mint your free Ment NFT!\n${timestamp}` });
+    const signature = await walletClient.value.signMessage({
+      message: `Sign to verify and mint your free Ment NFT!\n${timestamp}`,
+    });
     const res = await $api.post<ClaimResponse>('/users/claim', {
       jwt: query.token?.toString() || '',
       signature,
@@ -63,7 +66,13 @@ async function claimAirdrop() {
       console.debug(receipt);
       message.success("You've successfully claimed your MENT token.");
 
-      if (receipt.data?.to && receipt.data?.logs[0].topics[3]) {
+      if (
+        config.public.METADATA_BASE_URI &&
+        config.public.METADATA_TOKEN &&
+        receipt.data?.logs[0].topics[3]
+      ) {
+        getMetadata(Number(receipt.data?.logs[0].topics[3]), res.data.transactionHash);
+      } else if (receipt.data?.to && receipt.data?.logs[0].topics[3]) {
         const nftId = Number(receipt.data?.logs[0].topics[3]);
 
         await loadNft(receipt.data.to, nftId, res.data.transactionHash);
@@ -91,6 +100,20 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
     message.error('Fetch failed, missing NFT metadata!');
   }
 }
+
+async function getMetadata(id: number, transactionHash: string) {
+  try {
+    const url = `${config.public.METADATA_BASE_URI}${id}.json?token=${config.public.METADATA_TOKEN}`;
+
+    const metadata = await fetch(url).then(response => {
+      return response.json();
+    });
+    router.push({ name: 'share', query: { ...metadata, txHash: transactionHash } });
+  } catch (e) {
+    console.error(e);
+    message.error('Fetch failed, missing NFT metadata!');
+  }
+}
 </script>
 
 <template>
@@ -100,8 +123,8 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
     <div v-if="!isConnected" class="my-8 text-center">
       <h3 class="mb-6">Almost there!</h3>
       <p>
-        But first, connect a compatible digital wallet. This step is crucial
-        for securely receiving and managing the MENT token you’re about to receive.
+        But first, connect a compatible digital wallet. This step is crucial for securely receiving
+        and managing the MENT token you’re about to receive.
       </p>
     </div>
 
@@ -122,7 +145,7 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
       :loading="loading"
       @click="claimAirdrop()"
     >
-      Claim your MENT token
+      <span class="text-black">Claim your MENT token</span>
     </Btn>
   </div>
 </template>
