@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 type Address = `0x${string}`;
+
 import SuccessSVG from '~/assets/images/success.svg';
 import colors from '~/tailwind.colors';
 import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
@@ -21,7 +22,7 @@ const { handleError } = useErrors();
 const { address, isConnected } = useAccount();
 const { data: walletClient, refetch } = useWalletClient();
 const { connect, connectors } = useConnect();
-const { initContract, getTokenUri } = useContract();
+const { initContract, getTokenOfOwner, getTokenUri } = useContract();
 
 const loading = ref<boolean>(false);
 
@@ -81,23 +82,50 @@ async function claimAirdrop() {
       }
     }
   } catch (e) {
-    handleError(e);
+    if (
+      !config.public.CONTRACT_ADDRESS ||
+      !(await getMyNFT(config.public.CONTRACT_ADDRESS as Address))
+    ) {
+      handleError(e);
+    }
   }
   loading.value = false;
 }
 
-async function loadNft(contract: Address, id: number, transactionHash: string) {
+async function loadNft(contractAddress: Address, id: number, transactionHash: string) {
   try {
-    await initContract(contract);
+    await initContract(contractAddress);
     const url = await getTokenUri(id);
 
     const metadata = await fetch(url).then(response => {
       return response.json();
     });
-    router.push({ name: 'share', query: { ...metadata, txHash: transactionHash } });
+    router.push({ name: 'share', query: { ...metadata, nftId: id, txHash: transactionHash } });
   } catch (e) {
     console.error(e);
     message.error('Fetch failed, missing NFT metadata!');
+  }
+}
+
+async function getMyNFT(contract: Address) {
+  try {
+    await initContract(contract);
+    const id = await getTokenOfOwner(0);
+    const url = await getTokenUri(Number(id));
+
+    const metadata = await fetch(url).then(response => {
+      return response.json();
+    });
+
+    if (metadata) {
+      message.success('You already claimed NFT');
+      router.push({ name: 'share', query: { ...metadata } });
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.error(e);
+    return false;
   }
 }
 
@@ -108,7 +136,7 @@ async function getMetadata(id: number, transactionHash: string) {
     const metadata = await fetch(url).then(response => {
       return response.json();
     });
-    router.push({ name: 'share', query: { ...metadata, txHash: transactionHash } });
+    router.push({ name: 'share', query: { ...metadata, nftId: id, txHash: transactionHash } });
   } catch (e) {
     console.error(e);
     message.error('Fetch failed, missing NFT metadata!');

@@ -8,7 +8,9 @@ useHead({
 
 const router = useRouter();
 const { query } = useRoute();
+const message = useMessage();
 const config = useRuntimeConfig();
+const { watchAsset } = useContract();
 
 useSeoMeta(
   prepareOG(`Just minted my ${query.name} NFT on https://nft.ment.si!`, ``, `${query.image}`)
@@ -25,6 +27,7 @@ const metadata = ref<Metadata | null>({
   description: `${query?.description}`,
   image: `${query?.image}`,
 });
+const nftId = ref<string | undefined>(`${query?.nftId}`);
 const txHash = ref<string | undefined>(`${query?.txHash}`);
 
 function transactionLink(transactionHash?: string | null): string {
@@ -46,6 +49,14 @@ function transactionLink(transactionHash?: string | null): string {
       return '';
   }
 }
+
+async function importNft(nftId: string) {
+  const imported = await watchAsset(nftId);
+
+  if (imported) {
+    message.success("You've successfully imported your MENT token to your wallet.");
+  }
+}
 </script>
 
 <template>
@@ -63,6 +74,14 @@ function transactionLink(transactionHash?: string | null): string {
       </div>
       <div class="mt-4 text-center">
         <p class="mb-4">{{ metadata.description }}</p>
+        <Btn
+          v-if="query?.nftId && nftId"
+          size="large"
+          class="!text-black mb-6"
+          @click="importNft(nftId)"
+        >
+          Import NFT to wallet
+        </Btn>
         <a
           v-if="query?.txHash && txHash"
           :href="transactionLink(txHash)"
