@@ -29,7 +29,11 @@ const newUser = ref<UserInterface>({
 });
 
 function isEditable(row: UserInterface, index: number) {
-  return !row.email && props.users.length === index + 1;
+  return (
+    !row.email &&
+    (props.users.length === index + 1 ||
+      props.users.length % PaginationValues.PAGE_DEFAULT_LIMIT === index + 1)
+  );
 }
 
 const createColumns = (): DataTableColumns<UserInterface> => {
