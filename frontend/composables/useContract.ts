@@ -22,14 +22,42 @@ export default function useContract() {
   const usedChain = config.public.CHAIN_ID === Chains.MOONBASE ? moonbaseAlpha : moonbeam;
   const contract = ref();
 
+  async function getTokenOfOwner(index: number) {
+    return (await contract.value.read.tokenOfOwnerByIndex([address.value, index])) as number;
+  }
+
   async function getTokenUri(id: number) {
     return (await contract.value.read.tokenURI([id])) as string;
+  }
+
+  async function watchAsset(nftId: string | number) {
+    if (!walletClient.value) {
+      await refetch();
+      await sleep(200);
+    }
+    try {
+      const contractAddress = contract.value?.address
+        ? contract.value.address
+        : config.public.CONTRACT_ADDRESS;
+
+      await walletClient.value.watchAsset({
+        type: 'ERC721',
+        options: {
+          address: contractAddress,
+          tokenId: `${nftId}`,
+        },
+      });
+      return true;
+    } catch (e) {
+      contractError(e);
+      return false;
+    }
   }
 
   /**
    * Helper for initializing specific contract
    */
-  async function initContract(contractAddress: string) {
+  async function initContract(contractAddress: `0x${string}`) {
     if (!walletClient.value) {
       await refetch();
       await sleep(200);
@@ -85,6 +113,9 @@ export default function useContract() {
       } else if (errorData.includes('valid recovery code')) {
         // Problem with embedded signature
         msg = 'Problem with embedded wallet';
+      } else if (errorData.includes('Suggested NFT is not owned by the selected account ')) {
+        msg =
+          'Suggested NFT is not owned by the selected account, please try again with other wallet.';
       } else if (
         errorData.includes('user rejected transaction') ||
         errorData.includes('User rejected the request')
@@ -103,7 +134,9 @@ export default function useContract() {
   return {
     contract,
     contractError,
+    getTokenOfOwner,
     getTokenUri,
     initContract,
+    watchAsset,
   };
 }

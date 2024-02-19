@@ -29,7 +29,11 @@ const newUser = ref<UserInterface>({
 });
 
 function isEditable(row: UserInterface, index: number) {
-  return !row.email && props.users.length === index + 1;
+  return (
+    !row.email &&
+    (props.users.length === index + 1 ||
+      props.users.length % PaginationValues.PAGE_DEFAULT_LIMIT === index + 1)
+  );
 }
 
 const createColumns = (): DataTableColumns<UserInterface> => {
@@ -48,24 +52,6 @@ const createColumns = (): DataTableColumns<UserInterface> => {
           });
         } else {
           return h('span', { class: 'whitespace-nowrap' }, row.email);
-        }
-      },
-    },
-    {
-      key: 'email_start_send_time',
-      title: 'Start time',
-      minWidth: 100,
-      render(row: UserInterface, index: number) {
-        if (isEditable(row, index)) {
-          return h(NDatePicker, {
-            value: newUser.value.email_start_send_time,
-            type: 'datetime',
-            onUpdateValue(v: string) {
-              newUser.value.email_start_send_time = v;
-            },
-          });
-        } else {
-          return dateTimeToDateAndTime(row?.email_start_send_time || '');
         }
       },
     },
@@ -108,13 +94,13 @@ const createColumns = (): DataTableColumns<UserInterface> => {
         if (isEditable(row, index)) {
           return h(
             'button',
-            { class: 'icon-check text-xl text-green', onClick: () => addItem(row) },
+            { class: 'icon-check text-xl text-konference', onClick: () => addItem(row) },
             ''
           );
         } else if (!row.id) {
           return h(
             'button',
-            { class: 'icon-delete text-xl text-white', onClick: () => removeItem(row) },
+            { class: 'icon-delete text-xl text-black', onClick: () => removeItem(row) },
             ''
           );
         }
@@ -127,17 +113,12 @@ const columns = createColumns();
 
 function addItem(user: UserInterface) {
   if (!validateEmail(newUser.value.email)) {
-    message.warning('Please enter a valid email address');
-    return;
-  } else if (!newUser.value.email_start_send_time) {
-    message.warning('Please select start time');
+    message.warning('Please enter a valid email address.');
     return;
   }
 
   user.email = newUser.value.email;
-  user.email_start_send_time = newUser.value.email_start_send_time;
   newUser.value.email = '';
-  newUser.value.email_start_send_time = null;
 
   emit('addUser', newUser.value);
 }

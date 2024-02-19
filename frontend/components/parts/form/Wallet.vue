@@ -28,7 +28,7 @@ const { connect, connectors, pendingConnector } = useConnect();
       >
         <span class="inline-flex gap-2 items-center">
           <NuxtIcon :name="connector.id" class="text-xl" filled />
-          <span>{{ connector.name }}</span>
+          <span class="text-black">{{ connector.name }}</span>
         </span>
       </Btn>
     </n-space>

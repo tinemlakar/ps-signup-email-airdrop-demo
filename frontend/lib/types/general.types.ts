@@ -1,4 +1,4 @@
-export {}
+export {};
 
 declare global {
   interface ConfigInterface {
@@ -6,9 +6,12 @@ declare global {
     API_BASE: string;
     CHAIN_ID: number;
     CAPTCHA_KEY: string;
-  }  
+    CONTRACT_ADDRESS: string | null;
+    METADATA_BASE_URI: string | null;
+    METADATA_TOKEN: string | null;
+  }
 
- type AuthResponseProfile = {
+  type AuthResponseProfile = {
     id: number;
     authUser: {
       id: number;
@@ -20,17 +23,17 @@ declare global {
     };
   };
 
- type AuthResponse = {
+  type AuthResponse = {
     profile: AuthResponseProfile;
     authToken: {
       status: boolean;
       data: string;
     };
   };
-  
+
   type CsvItem = {
     email: string;
-    email_start_send_time: string;
+    email_start_send_time: string | null;
     email_send_time?: string | null;
     tx_hash?: string | null;
     wallet: string;

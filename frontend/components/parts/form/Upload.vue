@@ -24,8 +24,7 @@
       </div>
     </div>
     <Notification v-if="!hasRequiredColumns" type="error" class="mt-4 text-left">
-      Invalid file format. Please upload a valid CSV file with columns "email",
-      "email_start_send_time" and "wallet".
+      Invalid file format. Please upload a valid CSV file with column "email".
     </Notification>
   </template>
 
@@ -34,17 +33,19 @@
     <Btn
       class="flex-auto"
       type="primary"
+      :color="colors.blue"
       :disabled="!uploadedFile || !hasRequiredColumns || !fileData || fileData.length === 0"
       @click="$emit('proceed', fileData)"
     >
-      Start New Airdrop
+    <span class="text-black">Start New Airdrop</span>
     </Btn>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { UploadCustomRequestOptions } from 'naive-ui';
-import { FileInfo } from 'naive-ui/es/upload/src/interface';
+import type { UploadCustomRequestOptions } from 'naive-ui';
+import type { FileInfo } from 'naive-ui/es/upload/src/interface';
+import colors from '~/tailwind.colors';
 
 defineEmits(['close', 'proceed']);
 
@@ -55,7 +56,7 @@ const $papa = vueApp.config.globalProperties.$papa;
 const uploadedFile = ref<FileInfo | null>(null);
 const fileData = ref<CsvItem[] | null>(null);
 const fileColumns = ref<String[]>([]);
-const requiredColumns = ['email', 'email_start_send_time'];
+const requiredColumns = ['email'];
 
 const hasRequiredColumns = computed<boolean>(() =>
   requiredColumns.every(item => fileColumns.value.includes(item))
@@ -64,7 +65,7 @@ const hasRequiredColumns = computed<boolean>(() =>
 function uploadFileRequest({ file, onError, onFinish }: UploadCustomRequestOptions) {
   if (file.type !== 'text/csv' && file.type !== 'application/vnd.ms-excel') {
     console.warn(file.type);
-    message.warning('File must be of type CSV');
+    message.warning('File must be of CSV type.');
 
     /** Mark file as failed */
     onError();
@@ -83,6 +84,7 @@ function parseUploadedFile(file?: File | null) {
 
   $papa.parse(file, {
     header: true,
+    delimiter: '\n',
     skipEmptyLines: true,
     complete: async (results: CsvFileData) => {
       if (results.errors && results.errors.length) {
