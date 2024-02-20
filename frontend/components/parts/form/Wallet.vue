@@ -2,6 +2,7 @@
 import WalletSVG from '~/assets/images/wallet.svg';
 import { useConnect } from 'use-wagmi';
 
+const { fullPath } = useRoute();
 const { connect, connectors, pendingConnector } = useConnect();
 </script>
 
@@ -23,7 +24,7 @@ const { connect, connectors, pendingConnector } = useConnect();
           v-if="!connector.ready && connector.id === 'metaMask'"
           type="secondary"
           size="large"
-          href="https://metamask.app.link/dapp/nft.ment.si"
+          :href="`https://metamask.app.link/dapp/nft.ment.si/${fullPath}`"
         >
           <span class="inline-flex gap-2 items-center">
             <NuxtIcon :name="connector.id" class="text-xl" filled />
@@ -44,6 +45,10 @@ const { connect, connectors, pendingConnector } = useConnect();
           </span>
         </Btn>
       </template>
+      <p class="text-xs italic lg:hidden">
+        *If a wallet is not installed on your mobile device, return to this page after installation
+        to proceed with the claim process.
+      </p>
     </n-space>
   </div>
 </template>
