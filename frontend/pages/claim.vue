@@ -9,7 +9,7 @@ definePageMeta({
   layout: 'claim',
 });
 useHead({
-  title: 'Ment NFT airdrop',
+  title: 'Mint your MENT Token',
 });
 
 const config = useRuntimeConfig();

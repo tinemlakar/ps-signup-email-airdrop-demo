@@ -3,7 +3,7 @@ import { prepareOG } from '~/lib/utils/helpers';
 import { Chains } from '~/lib/values/general.values';
 
 useHead({
-  title: 'Ment NFT airdrop',
+  title: 'Mint your MENT Token',
 });
 
 const router = useRouter();

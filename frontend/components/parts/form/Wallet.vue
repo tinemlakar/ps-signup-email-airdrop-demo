@@ -45,7 +45,7 @@ const { connect, connectors, pendingConnector } = useConnect();
           </span>
         </Btn>
       </template>
-      <p class="text-xs lg:hidden">
+      <p class="text-xs italic lg:hidden">
         *If a wallet is not installed on your mobile device, return to this page after installation
         to proceed with the claim process.
       </p>
