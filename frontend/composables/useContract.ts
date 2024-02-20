@@ -50,7 +50,7 @@ export default function useContract() {
     }
   }
 
-  async function _watchAsset(nftId: string | number): Promise<boolean> {
+  async function _watchAsset(nftId: string | number) {
     try {
       const contractAddress = contract.value?.address
         ? contract.value.address
