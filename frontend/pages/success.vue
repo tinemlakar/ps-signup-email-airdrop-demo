@@ -5,14 +5,14 @@
     <p>Check your email and see where you stand.</p>
     <br />
     <p>
-      If you got in, you’ll have 72 hours to claim your MENT token in peace,
-      in the comfort of your own home. Now, go enjoy some music.
+      If you got in, you’ll have 72 hours to claim your MENT token in peace, in the comfort of your
+      own home. Now, go enjoy some music.
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
 useHead({
-  title: 'MENT token airdrop',
+  title: 'Ment NFT airdrop',
 });
 </script>

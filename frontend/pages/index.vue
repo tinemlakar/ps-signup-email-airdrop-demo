@@ -4,7 +4,7 @@ import SuperRareJpg from '~/assets/images/superrare.jpg';
 const { isMd } = useScreen();
 
 useHead({
-  title: 'MENT token airdrop',
+  title: 'Ment NFT airdrop',
 });
 </script>
 
