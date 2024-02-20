@@ -8,7 +8,7 @@ definePageMeta({
   layout: 'admin',
 });
 useHead({
-  title: 'MENT token airdrop',
+  title: 'Ment NFT airdrop',
 });
 
 const message = useMessage();

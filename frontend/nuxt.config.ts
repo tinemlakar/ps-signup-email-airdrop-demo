@@ -16,9 +16,9 @@ if (env === Environments.prod) {
 }
 
 const meta = {
-  title: 'Apillon email prebuild solution',
-  description: 'airdrop email',
-  url: 'https://apillon.io/',
+  title: 'powered by Apillon',
+  description: 'Ment NFT airdrop - powered by Apillon',
+  url: 'https://nft.ment.si/',
 };
 
 // https://nuxt.com/docs/api/configuration/nuxt-config

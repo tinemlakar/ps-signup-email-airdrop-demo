@@ -3,7 +3,7 @@ import { prepareOG } from '~/lib/utils/helpers';
 import { Chains } from '~/lib/values/general.values';
 
 useHead({
-  title: 'MENT token airdrop',
+  title: 'Ment NFT airdrop',
 });
 
 const router = useRouter();
@@ -49,14 +49,6 @@ function transactionLink(transactionHash?: string | null): string {
       return '';
   }
 }
-
-async function importNft(nftId: string) {
-  const imported = await watchAsset(nftId);
-
-  if (imported) {
-    message.success("You've successfully imported your MENT token to your wallet.");
-  }
-}
 </script>
 
 <template>
@@ -78,7 +70,7 @@ async function importNft(nftId: string) {
           v-if="query?.nftId && nftId"
           size="large"
           class="!text-black mb-6"
-          @click="importNft(nftId)"
+          @click="watchAsset(nftId)"
         >
           Import NFT to wallet
         </Btn>
