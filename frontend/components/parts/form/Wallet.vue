@@ -23,7 +23,7 @@ const { connect, connectors, pendingConnector } = useConnect();
           v-if="!connector.ready && connector.id === 'metaMask'"
           type="secondary"
           size="large"
-          href="https://metamask.app.link/dapp/google.com"
+          href="https://metamask.app.link/dapp/nft.ment.si"
         >
           <span class="inline-flex gap-2 items-center">
             <NuxtIcon :name="connector.id" class="text-xl" filled />
