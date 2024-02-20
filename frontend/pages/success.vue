@@ -13,6 +13,6 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Ment NFT airdrop',
+  title: 'Mint your MENT Token',
 });
 </script>

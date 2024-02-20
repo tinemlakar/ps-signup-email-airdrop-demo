@@ -16,8 +16,8 @@ if (env === Environments.prod) {
 }
 
 const meta = {
-  title: 'powered by Apillon',
-  description: 'Ment NFT airdrop - powered by Apillon',
+  title: 'Mint your MENT Token',
+  description: 'Powered by Apillon.',
   url: 'https://nft.ment.si/',
 };
 
@@ -82,7 +82,7 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: 'en' },
       bodyAttrs: { id: 'kalm' },
       title: meta.title,
-      titleTemplate: `%s - ${meta.title}`,
+      titleTemplate: `%s`,
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no',
 
