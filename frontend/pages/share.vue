@@ -69,7 +69,7 @@ function transactionLink(transactionHash?: string | null): string {
         <Btn
           v-if="query?.nftId && nftId"
           size="large"
-          class="!text-black mb-6"
+          class="!text-black mb-6 mobile:hidden"
           @click="watchAsset(nftId)"
         >
           Import NFT to wallet

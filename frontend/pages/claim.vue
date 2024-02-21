@@ -36,10 +36,12 @@ async function claimAirdrop() {
   loading.value = true;
   try {
     await refetch();
+    await sleep(200);
     const timestamp = new Date().getTime();
 
     if (!walletClient.value) {
       await connect({ connector: connectors.value[0] });
+      await sleep(200);
 
       if (!walletClient.value) {
         message.error('Could not connect with your wallet.');
