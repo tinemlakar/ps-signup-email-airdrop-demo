@@ -95,10 +95,15 @@ function onCaptchaVerify(token: string) {
 
     <div class="flex pb-6 space-x-2">
       <div class="my-auto">
-        <input v-model="formData.termsAndConditions" type="checkbox" class="w-[18px] h-[18px]">
+        <n-checkbox v-model:checked="formData.termsAndConditions" size="medium" />
       </div>
-      
-      <p>I have read and agree to <u class="cursor-pointer" @click="modalTermsAndConditionsVisible = true"><strong>Terms and Conditions and Privacy Policy.</strong></u></p>
+
+      <p>
+        I have read and agree to
+        <u class="cursor-pointer" @click="modalTermsAndConditionsVisible = true"
+          ><strong>Terms and Conditions and Privacy Policy.</strong></u
+        >
+      </p>
     </div>
 
     <!-- Hcaptcha -->
@@ -132,7 +137,7 @@ function onCaptchaVerify(token: string) {
       @close="() => (modalTermsAndConditionsVisible = false)"
       @update:show="modalTermsAndConditionsVisible = false"
     >
-      <TermsAndConditions @close="() => (modalTermsAndConditionsVisible = false)"/>
+      <TermsAndConditions @close="() => (modalTermsAndConditionsVisible = false)" />
     </modal>
   </n-form>
 </template>
