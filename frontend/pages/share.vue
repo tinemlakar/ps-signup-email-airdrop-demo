@@ -66,6 +66,7 @@ function transactionLink(transactionHash?: string | null): string {
       </div>
       <div class="mt-4 text-center">
         <p class="mb-4">{{ metadata.description }}</p>
+        <!-- Import NFT -->
         <Btn
           v-if="query?.nftId && nftId"
           size="large"
@@ -74,6 +75,30 @@ function transactionLink(transactionHash?: string | null): string {
         >
           Import NFT to wallet
         </Btn>
+
+        <!-- Moonbeans -->
+        <Btn
+          v-if="query?.nftId && nftId"
+          class="!text-black mb-3"
+          size="large"
+          type="secondary"
+          :href="`https://moonbeans.io/item/ment/${nftId}`"
+        >
+          View your MENT Token
+          <NuxtIcon name="arrow" class="absolute right-6 icon-auto" />
+        </Btn>
+        <Btn
+          v-else
+          class="!text-black mb-3"
+          size="large"
+          type="secondary"
+          href="https://moonbeans.io/collections/ment"
+        >
+          View MENT Token collection
+          <NuxtIcon name="arrow" class="absolute right-6 icon-auto" />
+        </Btn>
+
+        <!-- Transaction -->
         <a
           v-if="query?.txHash && txHash"
           :href="transactionLink(txHash)"
