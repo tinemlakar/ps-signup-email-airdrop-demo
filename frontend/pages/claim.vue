@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 type Address = `0x${string}`;
 import SuccessSVG from '~/assets/images/success.svg';
-import colors from '~/tailwind.colors';
 import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
 
 definePageMeta({
   layout: 'claim',
 });
 useHead({
-  title: 'MENT NFT airdrop',
+  title: 'Apillon email airdrop prebuild solution',
 });
 
 const { query } = useRoute();
@@ -101,28 +100,19 @@ async function loadNft(contract: Address, id: number, transactionHash: string) {
       <h3 class="mb-6">Almost there!</h3>
       <p>
         But first, connect compatible digital wallet. This step is crucial for securely receiving
-        and managing the MENT token you’ll about to receive.
+        and managing the token you’ll about to receive.
       </p>
     </div>
 
     <div v-else class="my-8 text-center">
       <h3 class="mb-6">Great success!</h3>
       <p>
-        You’ve connected your wallet and you are one click away from your bonus-filled MENT token.
-        See what the future of MENT holds for you 🔮
+        To join this NFT airdrop, you need to connect your EVM compatible wallet. This step is
+        crucial for securely receiving and managing the airdropped NFTs.
       </p>
     </div>
 
     <ConnectWallet v-if="!isConnected" size="large" />
-    <Btn
-      v-else
-      size="large"
-      class="text-black"
-      :color="colors.blue"
-      :loading="loading"
-      @click="claimAirdrop()"
-    >
-      Claim your MENT token
-    </Btn>
+    <Btn v-else size="large" :loading="loading" @click="claimAirdrop()">Claim airdrop</Btn>
   </div>
 </template>
