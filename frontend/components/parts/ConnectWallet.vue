@@ -107,7 +107,7 @@ async function login() {
     }
 
     const timestamp = new Date().getTime();
-    const message = 'Sign to verify and mint your free Ment NFT!';
+    const message = 'Sign to verify you wallet.';
 
     const signature = await walletClient.value.signMessage({
       message: `${message}\n${timestamp}`,

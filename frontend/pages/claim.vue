@@ -51,7 +51,7 @@ async function claimAirdrop() {
     }
 
     const signature = await walletClient.value.signMessage({
-      message: `Sign to verify and mint your free Ment NFT!\n${timestamp}`,
+      message: `Sign to verify you wallet.\n${timestamp}`,
     });
     const res = await $api.post<ClaimResponse>('/users/claim', {
       jwt: query.token?.toString() || '',

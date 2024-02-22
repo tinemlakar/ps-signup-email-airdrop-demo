@@ -26,7 +26,7 @@ describe('admin login', () => {
 
   test('login', async () => {
     const timestamp = new Date().getTime();
-    const message = `Sign to verify and mint your free Ment NFT!\n${timestamp}`;
+    const message = `Sign to verify you wallet.\n${timestamp}`;
 
     const identity = new Identity();
     const signature = await adminWallet.signMessage(message);
