@@ -74,4 +74,3 @@ export function areArraysEqual(a1: any, a2: any, sorted = false) {
 export function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
 }
-
