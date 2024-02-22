@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { prepareOG } from '~/lib/utils/helpers';
 import { Chains } from '~/lib/values/general.values';
 
 useHead({
@@ -9,10 +8,6 @@ useHead({
 const router = useRouter();
 const { query } = useRoute();
 const config = useRuntimeConfig();
-
-useSeoMeta(
-  prepareOG(`Just minted my ${query.name} NFT on https://nft.ment.si!`, ``, `${query.image}`)
-);
 
 onBeforeMount(() => {
   if (!query.name || !query.image) {
@@ -51,14 +46,14 @@ function transactionLink(transactionHash?: string | null): string {
 <template>
   <div v-if="metadata" class="max-w-md w-full md:px-6 my-12 mx-auto">
     <div class="my-8 text-center">
-      <h3 class="mb-6">Just minted my #{{ metadata.name }} NFT on nft.ment.si!</h3>
-      <p></p>
+      <h3 class="mb-6">Celebrate your triumph!</h3>
+      <p>Display Your '{{ metadata.name }}' NFT Collectible on Social Media for All to Envy.</p>
     </div>
 
     <div class="rounded-lg overflow-hidden mb-8">
       <img :src="metadata.image" class="" width="400" height="400" alt="nft" />
 
-      <div class="p-6 bg-bg-light">
+      <div class="p-6 bg-bg-lighter">
         <h5>{{ metadata.name }}</h5>
       </div>
       <div class="mt-4 text-center">
@@ -77,11 +72,11 @@ function transactionLink(transactionHash?: string | null): string {
     <Btn
       type="secondary"
       size="large"
-      :href="`https://twitter.com/intent/tweet?text=Just minted my ${metadata.name} NFT on nft.ment.si!&url=https://nft.ment.si/`"
+      :href="`https://twitter.com/intent/tweet?text=Display Your '${metadata.name}' NFT Collectible on Social Media for All to Envy.`"
     >
       <span class="inline-flex gap-2 items-center">
-        <NuxtIcon name="x" class="text-xl text-black" />
-        <span class="text-black">Share on X</span>
+        <NuxtIcon name="x" class="text-xl" />
+        <span>Share on X</span>
       </span>
     </Btn>
   </div>
