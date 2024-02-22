@@ -80,9 +80,11 @@ async function login() {
 
   try {
     await refetch();
+    await sleep(200);
 
     if (!walletClient.value) {
       await connect({ connector: connectors.value[0] });
+      await sleep(200);
 
       if (!walletClient.value) {
         error('Could not connect with wallet');
