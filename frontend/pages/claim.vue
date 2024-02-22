@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-type Address = `0x${string}`;
-
-import SuccessSVG from '~/assets/images/success.svg';
 import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
+import SuccessSVG from '~/assets/images/success.svg';
+
+type Address = `0x${string}`;
 
 definePageMeta({
   layout: 'claim',
@@ -49,7 +49,10 @@ async function claimAirdrop() {
       }
     }
 
-    const signature = await walletClient.value.signMessage({ message: `test\n${timestamp}` });
+    const signature = await walletClient.value.signMessage({
+      message: `Sign to verify you wallet.\n${timestamp}`,
+    });
+
     const res = await $api.post<ClaimResponse>('/users/claim', {
       jwt: query.token?.toString() || '',
       signature,

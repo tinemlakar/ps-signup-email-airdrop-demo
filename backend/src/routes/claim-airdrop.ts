@@ -33,7 +33,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
     walletAddress: body.address,
     signature: body.signature,
     signatureValidityMinutes: 10,
-    message: `test\n${body.timestamp}`,
+    message: `Sign to verify you wallet.\n${body.timestamp}`,
     timestamp: body.timestamp,
   });
 

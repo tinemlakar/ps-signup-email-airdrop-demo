@@ -84,7 +84,8 @@ export class Cron {
                 appUrl: env.APP_URL,
                 link: `${env.APP_URL}/claim?token=${token}`,
                 claimExpiresIn: env.CLAIM_EXPIRES_IN,
-              }
+              },
+              "Apillon"
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
@@ -95,11 +96,12 @@ export class Cron {
             //Currently, waiting line for airdrop is full.Send info email and set appropriate status
             await SmtpSendTemplate(
               [users[i].email],
-              "You are in waiting line for NFT claim",
+              "You have been placed on a waitlist for NFT Airdrop token",
               "en-airdrop-waiting-line",
               {
                 appUrl: env.APP_URL,
-              }
+              },
+              "Apillon"
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
@@ -216,7 +218,8 @@ export class Cron {
                   appUrl: env.APP_URL,
                   link: `${env.APP_URL}/claim?token=${token}`,
                   claimExpiresIn: env.CLAIM_EXPIRES_IN,
-                }
+                },
+                "Apillon"
               );
             } catch (err) {
               await mysql.paramExecute(
