@@ -8,6 +8,8 @@ type SignupForm = {
   token?: any;
 };
 
+const router = useRouter();
+
 const message = useMessage();
 const emit = defineEmits(['submitSuccess']);
 
@@ -59,6 +61,8 @@ async function signUp() {
 
     if (res.data && res.data.success) {
       emit('submitSuccess');
+
+      router.push({ path: '/success' });
     }
   } catch (e) {
     handleError(e);
