@@ -1,4 +1,5 @@
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i0e4n2k8
-docker build -t ment-airdrop:latest .
-docker tag ment-airdrop:latest public.ecr.aws/i0e4n2k8/ment-airdrop:latest
-docker push public.ecr.aws/i0e4n2k8/ment-airdrop:latest
+set -e
+
+docker build -t ps-signup-email-airdrop .
+docker tag ps-signup-email-airdrop ps-signup-email-airdrop:latest
+# docker save -o ps-signup-email-airdrop.tar ps-signup-email-airdrop:latest
