@@ -1,4 +1,43 @@
-# Email airdrop prebuild solution
+# Pre-built solution for Email sign upAirdrop via Apillon API (frontend)
+
+This repository contains source code for Email sign up Airdrop website.
+
+## Overview
+
+Solution has 3 main parts. Admin dashboard, page for NFT claim and page for users to sign up for receiving an NFT.
+In admin dashboard, admin adds emails, see their status, statistic, ...
+
+In the sign up page the end users can solve captcha and add their email address to reserve an NFT or get added to the waitlist. Users have a limited amount of time to claim their NFT or the next in line gets it.
+
+Cron job runs in the background and sends claim email when time set for sending passes.
+
+Users receives an email that redirects him to the claim page. On the claim page he connects the wallets and triggers the claiming process on the backend.
+
+## Configuration
+
+In `lib/config/` we can find configs for different environments.
+
+```ts
+const config: ConfigInterface = {
+  APP_URL: 'http://localhost:3000',
+  API_BASE: 'http://localhost:3001',
+  CHAIN_ID: 1287,
+  CONTRACT_ADDRESS: null,
+  METADATA_BASE_URI: null,
+  METADATA_TOKEN: null,
+};
+```
+
+You need to update this config for a smoother frontend experience.
+
+- `APP_URL` presents the URL where the frontend website lives.
+- `API_BASE` presents the URL where backend (API) lives.
+- `CHAIN_ID` is the ID of the EVM chain that you NFTs are.
+- `CONTRACT_ADDRESS` is the onchain contract address of your NFT collection.
+- `METADATA_BASE_URI` presents the base uri where you NFTs metadata live (IPNS if created via apillon).
+- `METADATA_TOKEN` presents the JWT token of the NFTs metadata URI.
+
+If `METADATA_BASE_URI` and `METADATA_TOKEN` are not present, the website still works normally but the users need to have their metamask connected to load a NFT after it was minted.
 
 ## Stack
 
