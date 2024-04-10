@@ -76,7 +76,8 @@ export const env = {
   /**
    * Admin
    */
-  ADMIN_WALLET: process.env['ADMIN_WALLET']?.toLocaleLowerCase().split(/[,;]/) || [],
+  ADMIN_WALLET:
+    process.env['ADMIN_WALLET']?.toLocaleLowerCase().split(/[,;]/) || [],
 
   /**
    * Mysql URL.

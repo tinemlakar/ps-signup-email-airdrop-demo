@@ -1,7 +1,7 @@
-import { verify } from "hcaptcha";
-import { AppEnvironment, ValidatorErrorCode } from "../config/values";
-import { env } from "../config/env";
-import { ResourceError } from "./errors";
+import { verify } from 'hcaptcha';
+import { AppEnvironment, ValidatorErrorCode } from '../config/values';
+import { env } from '../config/env';
+import { ResourceError } from './errors';
 
 export type Captcha = { eKey: string; token: string };
 /**
@@ -13,7 +13,7 @@ export async function checkCaptcha(captchaToken: string): Promise<boolean> {
   //Skip check for local_dev and test environment
   if (
     [AppEnvironment.LOCAL_DEV, AppEnvironment.TEST].includes(
-      env.APP_ENV as AppEnvironment
+      env.APP_ENV as AppEnvironment,
     )
   ) {
     return true;
@@ -35,16 +35,16 @@ export async function checkCaptcha(captchaToken: string): Promise<boolean> {
 
 async function verifyCaptcha(
   token: string,
-  secret: string = env.CAPTCHA_SECRET
+  secret: string = env.CAPTCHA_SECRET,
 ): Promise<boolean> {
   try {
     return (await verify(secret, token)).success;
   } catch (err) {
-    console.error("Error verifying captcha!", err);
+    console.error('Error verifying captcha!', err);
     throwCodeException(ValidatorErrorCode.CAPTCHA_INVALID);
   }
 }
 
 function throwCodeException(code: ValidatorErrorCode) {
-  throw new ResourceError(code, null, "checkCaptcha");
+  throw new ResourceError(code, null, 'checkCaptcha');
 }

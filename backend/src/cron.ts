@@ -14,7 +14,9 @@ export class Cron {
   constructor() {
     this.cronJobs.push(new CronJob('* * * * *', this.sendEmail, null, false));
     if (env.MAX_SUPPLY > 0) {
-      this.cronJobs.push(new CronJob('* * * * *', this.processExpiredClaims, null, false));
+      this.cronJobs.push(
+        new CronJob('* * * * *', this.processExpiredClaims, null, false),
+      );
     }
   }
 
@@ -48,7 +50,7 @@ export class Cron {
           AND status = @status
         ;
        `,
-        { status: SqlModelStatus.ACTIVE }
+        { status: SqlModelStatus.ACTIVE },
       );
       const numOfReservations = res[0].total;
       availableNftLeft = env.MAX_SUPPLY - numOfReservations;
@@ -65,8 +67,12 @@ export class Cron {
           FOR UPDATE
         ;
        `,
-        { airdrop_status: AirdropStatus.PENDING, status: SqlModelStatus.ACTIVE, date: new Date() },
-        conn
+        {
+          airdrop_status: AirdropStatus.PENDING,
+          status: SqlModelStatus.ACTIVE,
+          date: new Date(),
+        },
+        conn,
       );
 
       const updates = [];
@@ -84,12 +90,12 @@ export class Cron {
                 link: `${env.APP_URL}/claim?token=${token}`,
                 claimExpiresIn: env.CLAIM_EXPIRES_IN,
               },
-              'Apillon'
+              'Apillon',
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
                 AirdropStatus.EMAIL_SENT
-              }, '${dateToSqlString(new Date())}')`
+              }, '${dateToSqlString(new Date())}')`,
             );
           } else {
             //Currently, waiting line for airdrop is full.Send info email and set appropriate status
@@ -100,20 +106,20 @@ export class Cron {
               {
                 appUrl: env.APP_URL,
               },
-              'Apillon'
+              'Apillon',
             );
             updates.push(
               `(${users[i].id}, '${users[i].email}', ${
                 AirdropStatus.IN_WAITING_LINE
-              }, '${dateToSqlString(new Date())}')`
+              }, '${dateToSqlString(new Date())}')`,
             );
           }
         } catch (e) {
           writeLog(LogType.ERROR, e, 'cron.ts', 'sendEmail');
           updates.push(
             `(${users[i].id}, '${users[i].email}', ${AirdropStatus.EMAIL_ERROR}, '${dateToSqlString(
-              new Date()
-            )}')`
+              new Date(),
+            )}')`,
           );
         }
       }
@@ -151,10 +157,13 @@ export class Cron {
           FOR UPDATE
         ;
        `,
-          { airdrop_status: AirdropStatus.EMAIL_SENT, status: SqlModelStatus.ACTIVE },
-          conn
+          {
+            airdrop_status: AirdropStatus.EMAIL_SENT,
+            status: SqlModelStatus.ACTIVE,
+          },
+          conn,
         )
-      ).map(x => x.id);
+      ).map((x) => x.id);
 
       if (usersWithExpiredClaim.length) {
         //Update those users to claim expired
@@ -165,9 +174,12 @@ export class Cron {
         ;
        `,
           { airdrop_status: AirdropStatus.AIRDROP_CLAIM_EXPIRED },
-          conn
+          conn,
         );
-        console.info(usersWithExpiredClaim.length + ' users updated to AIRDROP_CLAIM_EXPIRED');
+        console.info(
+          usersWithExpiredClaim.length +
+            ' users updated to AIRDROP_CLAIM_EXPIRED',
+        );
 
         //Get users in waiting line and set their airdrop status to PENDING, so that they will recieve email for claim
         const usersInWaitingLine = await mysql.paramExecute(
@@ -179,11 +191,16 @@ export class Cron {
           FOR UPDATE
         ;
        `,
-          { airdrop_status: AirdropStatus.IN_WAITING_LINE, status: SqlModelStatus.ACTIVE },
-          conn
+          {
+            airdrop_status: AirdropStatus.IN_WAITING_LINE,
+            status: SqlModelStatus.ACTIVE,
+          },
+          conn,
         );
 
-        console.info('Num of users in waiting line: ' + usersInWaitingLine.length);
+        console.info(
+          'Num of users in waiting line: ' + usersInWaitingLine.length,
+        );
 
         if (usersInWaitingLine.length) {
           await mysql.paramExecute(
@@ -191,15 +208,15 @@ export class Cron {
                 SET 
                 airdrop_status = @airdrop_status,
                 email_sent_time = NOW()
-                WHERE id IN (${usersInWaitingLine.map(x => x.id).join(',')})
+                WHERE id IN (${usersInWaitingLine.map((x) => x.id).join(',')})
               ;
             `,
             { airdrop_status: AirdropStatus.EMAIL_SENT },
-            conn
+            conn,
           );
           console.info(
-            usersInWaitingLine.map(x => x.id).join(',') +
-              ' should me moved from waiting line. Sending emails....'
+            usersInWaitingLine.map((x) => x.id).join(',') +
+              ' should me moved from waiting line. Sending emails....',
           );
 
           for (const user of usersInWaitingLine) {
@@ -214,7 +231,7 @@ export class Cron {
                   link: `${env.APP_URL}/claim?token=${token}`,
                   claimExpiresIn: env.CLAIM_EXPIRES_IN,
                 },
-                'Apillon'
+                'Apillon',
               );
             } catch (err) {
               await mysql.paramExecute(
@@ -224,7 +241,7 @@ export class Cron {
               ;
             `,
                 { airdrop_status: AirdropStatus.EMAIL_ERROR, user_id: user.id },
-                conn
+                conn,
               );
             }
           }

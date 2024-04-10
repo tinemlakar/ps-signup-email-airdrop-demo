@@ -1,12 +1,12 @@
-import { Application } from "express";
-import { NextFunction, Request, Response } from "../http";
-import { RouteErrorCode, ValidatorErrorCode } from "../config/values";
-import { ResourceError } from "../lib/errors";
-import { readEmailAirdropToken } from "../lib/jwt";
-import { AirdropStatus, User } from "../models/user";
-import { Identity, LogLevel, Nft } from "@apillon/sdk";
-import { LogType, writeLog } from "../lib/logger";
-import { env } from "../config/env";
+import { Application } from 'express';
+import { NextFunction, Request, Response } from '../http';
+import { RouteErrorCode, ValidatorErrorCode } from '../config/values';
+import { ResourceError } from '../lib/errors';
+import { readEmailAirdropToken } from '../lib/jwt';
+import { AirdropStatus, User } from '../models/user';
+import { Identity, LogLevel, Nft } from '@apillon/sdk';
+import { LogType, writeLog } from '../lib/logger';
+import { env } from '../config/env';
 
 /**∂
  * Installs new route on the provided application.
@@ -14,10 +14,10 @@ import { env } from "../config/env";
  */
 export function inject(app: Application) {
   app.post(
-    "/users/claim",
+    '/users/claim',
     (req: Request, res: Response, next: NextFunction) => {
       resolve(req, res).catch(next);
-    }
+    },
   );
 }
 
@@ -88,10 +88,10 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   } catch (e) {
     writeLog(
       LogType.ERROR,
-      "Error creating airdrop",
-      "claim-airdrop.ts",
-      "resolve",
-      e
+      'Error creating airdrop',
+      'claim-airdrop.ts',
+      'resolve',
+      e,
     );
     user.airdrop_status = AirdropStatus.AIRDROP_ERROR;
   }
@@ -99,7 +99,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
   await user.update();
   if (response && response.success) {
     return res.respond(200, {
-      success: "ok",
+      success: 'ok',
       transactionHash: response.transactionHash,
     });
   } else {
