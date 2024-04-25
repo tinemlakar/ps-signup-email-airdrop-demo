@@ -91,3 +91,4 @@ bin/deploy/env.staging.yml
 .env
 .env.*
 !.env.example
+*.tar
